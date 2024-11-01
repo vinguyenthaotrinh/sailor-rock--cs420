@@ -19,7 +19,7 @@ print("Which algorithm?")
 print("0) Test")
 print("1) Breadth first search")
 print("2) Depth first search")
-# print("3) Uniform cost search")
+print("3) Uniform cost search")
 # print("4) A* search")
 # print("5) all")
 p = input("Type a number and press enter: ")
@@ -27,7 +27,7 @@ option = int(p)
 
 # gets file from args and plays that puzzle
 
-for i in range(4, 5):  # Chạy từ 1 đến 10
+for i in range(9, 10):  # Chạy từ 1 đến 10
     file_name = f'levels/input-{i:02}.txt'  # Định dạng tên file, đảm bảo có hai chữ số
     runSearch(new_game, file_name, option)
 

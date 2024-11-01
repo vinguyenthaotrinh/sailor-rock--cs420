@@ -1,8 +1,8 @@
 from board import Board
 import algorithms.bfs as bfs
 import algorithms.dfs as dfs
+import algorithms.ucs as ucs
 import algorithms.test as test
-# import ucs
 
 class Game:
     def new_board(self, file_name):
@@ -48,8 +48,8 @@ class Game:
             bfs.search(board)
         if option == 2:
             dfs.search(board)
-        # if option == 3:
-        #     ucs.search(board)
+        if option == 3:
+            ucs.search(board)
         # if option == 4:
         #     ass.search(board)
         if option == 5:  # all get executed
