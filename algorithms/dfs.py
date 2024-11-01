@@ -6,7 +6,7 @@ from copy import deepcopy
 def print_results(board, gen, dur, mem_usage):
     print("Algorithm: DFS")
     print("Steps: {}".format(len(board.dir_list)))
-    print("Total cost {}: ".format(board.cost))
+    print("Total cost: {}".format(board.cost))
     print("Node: {}".format(gen))
     print("Time: {:.2f} ms".format(dur * 1000))
     print("Memory: {:.2f} MB".format(mem_usage / 1024 / 1024))

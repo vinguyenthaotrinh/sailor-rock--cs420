@@ -27,7 +27,7 @@ option = int(p)
 
 # gets file from args and plays that puzzle
 
-for i in range(9, 10):  # Chạy từ 1 đến 10
+for i in range(2, 3):  # Chạy từ 1 đến 10
     file_name = f'levels/input-{i:02}.txt'  # Định dạng tên file, đảm bảo có hai chữ số
     runSearch(new_game, file_name, option)
 

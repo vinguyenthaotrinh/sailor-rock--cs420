@@ -1,12 +1,12 @@
+import tracemalloc
+import heapq
 from time import time
 from copy import deepcopy
-import heapq
-import tracemalloc
 
 def print_results(board, gen, dur, mem_usage):
     print("Algorithm: UCS")
     print("Steps: {}".format(len(board.dir_list)))
-    print("Total cost {}: ".format(board.cost))
+    print("Total cost: {}".format(board.cost))
     print("Node: {}".format(gen))
     print("Time: {:.2f} ms".format(dur * 1000))
     print("Memory: {:.2f} MB".format(mem_usage / 1024 / 1024))
@@ -36,42 +36,30 @@ def search(board):
     node = deepcopy(board)
     nodes_generated += 1
     frontier = []
-    frontier_set = set()
     heapq.heappush(frontier, (node.cost, node))
-    frontier_set.add(node)
+    reached = dict()
+    reached[(tuple(node.stones), node.player)] = node.cost
     
-    explored = set()
-    
-    while frontier:
-        # Pop the node with the lowest cost
+    while len(frontier) > 0:
         _, cur_node = heapq.heappop(frontier)
-        frontier_set.remove(cur_node)
         
         if cur_node.is_win():
             end = time()
             mem_usage = tracemalloc.get_traced_memory()[1]
             tracemalloc.stop()
+            replay_solution(board, cur_node)
             print_results(cur_node, nodes_generated, end - start, mem_usage)
             return cur_node
-        
-        explored.add(cur_node)
-        
-        for move in cur_node.moves_available():
-            child = deepcopy(cur_node)
-            child.move(move)
+                
+        moves = cur_node.moves_available()
+        for m in moves:
+            child = cur_node.clone_with_move(m)
             nodes_generated += 1
             
-            if child not in explored and child not in frontier_set:
+            if (tuple(child.stones), child.player) not in reached or child.cost < reached[(tuple(child.stones), child.player)]:
+                reached[(tuple(child.stones), child.player)] = child.cost
                 heapq.heappush(frontier, (child.cost, child))
-                frontier_set.add(child)
-            elif child in frontier_set:
-                # Check if there's a node with higher cost and replace it
-                existing_child = next(n for cost, n in frontier if n == child)
-                if child.cost < existing_child.cost:
-                    frontier.remove((existing_child.cost, existing_child))
-                    heapq.heappush(frontier, (child.cost, child))
-                    frontier_set.add(child)
-    
+                
     tracemalloc.stop()
     print("Solution not found")
     return
