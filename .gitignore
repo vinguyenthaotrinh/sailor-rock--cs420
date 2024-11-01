@@ -3,6 +3,9 @@ bin
 lib
 __pycache__
 
-# Folder
+# Folders
 puzzle/
+
+# Files
+test.py
 
