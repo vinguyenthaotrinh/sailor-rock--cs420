@@ -56,7 +56,7 @@ def search(board):
                 replay_solution(board, child)
                 print_results(child, nodes_generated, end - start, mem_usage)
                 return child
-            if child not in reached:
+            if not child.is_deadlock() and child not in reached:
                 frontier.append(child)
                 reached.add(child)
     

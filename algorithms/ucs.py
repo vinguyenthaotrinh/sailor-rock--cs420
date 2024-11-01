@@ -56,7 +56,7 @@ def search(board):
             child = cur_node.clone_with_move(m)
             nodes_generated += 1
             
-            if (tuple(child.stones), child.player) not in reached or child.cost < reached[(tuple(child.stones), child.player)]:
+            if not child.is_deadlock() and ((tuple(child.stones), child.player) not in reached or child.cost < reached[(tuple(child.stones), child.player)]):
                 reached[(tuple(child.stones), child.player)] = child.cost
                 heapq.heappush(frontier, (child.cost, child))
                 

@@ -17,16 +17,37 @@ def replay_solution(start_board, end_board):
     replay_board = deepcopy(start_board)
     replay_board.print_board()  # In trạng thái bảng cuối cùng
     end_board.dir_list = []
-    st = "rruuuuruulldrurdldddddlluurlddrruuuurrrurddullluulldrurdldddlldrdruuuurrrurdllluulldrurdldrrr"
+    st = "rldlluurdldruuluuurrddlrrrurrdlllluulldddrdrrrrudlllluluuurrddrdururrdlddlluururdllluullddrdddluururrddlruulldlddrurruururrdlllluullddddrrrrrudlldluruullruulldddurrrrurrdlllllruulldd"
     for i in range(len(st)):
         end_board.dir_list.append(st[i])
     for dir in end_board.dir_list:
         print(dir)
         replay_board.move(dir)
         replay_board.print_board()  # In trạng thái bảng
+        
+def replay_solution_file(start_board, end_board):
+    replay_board = deepcopy(start_board)
+    
+    with open("output-06.txt", "w") as file:
+        # Ghi trạng thái bảng cuối cùng
+        file.write("Final board state:\n")
+        file.write(replay_board.get_board_as_string() + "\n")  # Giả sử hàm get_board_as_string() trả về trạng thái bảng dưới dạng chuỗi
+        
+        end_board.dir_list = []
+        st = "drruldlluurdldruuluuurrddlrrrurrdlllluulldddrdrrrrudlllluluuurrddrdururrdlddlluururdllluullddrdddluururrddlruulldlddrurruururrdlllluullddddrrrrrudlldluruullruulldddurrrrurrdlllllruulldd"
+        
+        for i in range(len(st)):
+            end_board.dir_list.append(st[i])
+        
+        for dir in end_board.dir_list:
+            file.write(f"Move: {dir}\n")
+            replay_board.move(dir)
+            # Ghi trạng thái bảng sau mỗi nước đi
+            file.write(replay_board.get_board_as_string() + "\n")  # Giả sử hàm get_board_as_string() trả về trạng thái bảng dưới dạng chuỗi
+
 
 def search(board):
-    replay_solution(board, board)
+    replay_solution_file(board, board)
     # start = time()
     # tracemalloc.start()  # Bắt đầu theo dõi bộ nhớ
     # nodes_generated = 0

@@ -65,7 +65,7 @@ class Board:
                 if (self.player[0] + dr[index], self.player[1] + dc[index]) in self.stones:
                     pos_behind = (self.player[0] + dr[index] * 2, self.player[1] + dc[index] * 2)
                     if pos_behind not in self.stones and pos_behind not in Board.walls:
-                    # what if there's a wall or box behind it?
+                    # what if there's a wall or stone behind it?
                         moves.append(char_dir[index].upper())
                 else:
                     moves.append(char_dir[index])
@@ -142,3 +142,85 @@ class Board:
         for row in matrix:
             print(''.join(row))
         print("_" * 10)
+        
+    def get_board_as_string(self):
+        matrix = self.get_matrix()
+        board_str = '\n'.join(''.join(row) for row in matrix)  # Ghép các hàng thành chuỗi
+        board_str += '\n' + "_" * 10  # Thêm dòng ngăn cách phía dưới
+        return board_str
+    
+    ''' Check deadlock: stone on the corner of walls or other stones   '''
+    def is_deadlock(self):
+        mat = self.get_matrix()
+        for stone in self.stones:
+            x, y = stone
+            if mat[x][y] == '*':
+                continue
+            #corner up-left
+            if mat[x - 1][y] in ['#','$','*'] and mat[x][y - 1] in ['#','$','*']:
+                if mat[x - 1][y - 1] in ['#','$','*']:
+                    return True
+                if mat[x - 1][y] == '#' and mat[x][y - 1] =='#':
+                    return True
+                if mat[x - 1][y] in ['$','*'] and mat[x][y - 1] in ['$','*']:
+                    if mat[x - 1][y + 1] == '#' and mat[x + 1][y - 1] == '#':
+                        return True
+                if mat[x - 1][y] in ['$','*'] and mat[x][y - 1] == '#':
+                    if mat[x - 1][y + 1] == '#':
+                        return True
+                if mat[x - 1][y] == '#' and mat[x][y - 1] in ['$','*']:
+                    if mat[x + 1][y - 1] == '#':
+                        return True
+                    
+            # corner up-right
+            if mat[x - 1][y] in ['#','$','*'] and mat[x][y + 1] in ['#','$','*']:
+                if mat[x - 1][y + 1] in ['#','$','*']:
+                    return True
+                if mat[x - 1][y] == '#' and mat[x][y + 1] =='#':
+                    return True
+                if mat[x - 1][y] in ['$','*'] and mat[x][y + 1] in ['$','*']:
+                    if mat[x - 1][y - 1] == '#' and mat[x + 1][y + 1] == '#':
+                        return True
+                if mat[x - 1][y] in ['$','*'] and mat[x][y + 1] == '#':
+                    if mat[x - 1][y - 1] == '#':
+                        return True
+                if mat[x - 1][y] == '#' and mat[x][y + 1] in ['$','*']:
+                    if mat[x + 1][y + 1] == '#':
+                        return True
+
+
+            #corner down-left
+            elif mat[x + 1][y] in ['#','$','*'] and mat[x][y - 1] in ['#','$','*']:
+                if mat[x + 1][y - 1] in ['#','$','*']:
+                    return True
+                if mat[x + 1][y] == '#' and mat[x][y - 1] =='#':
+                    return True
+                if mat[x + 1][y] in ['$','*'] and mat[x][y - 1] in ['$','*']:
+                    if mat[x - 1][y - 1] == '#' and mat[x + 1][y + 1] == '#':
+                        return True
+                if mat[x + 1][y] in ['$','*'] and mat[x][y - 1] == '#':
+                    if mat[x + 1][y + 1] == '#':
+                        return True
+                if mat[x + 1][y] == '#' and mat[x][y - 1] in ['$','*']:
+                    if mat[x - 1][y - 1] == '#':
+                        return True
+                    
+
+            #corner down-right
+            elif mat[x + 1][y] in ['#','$','*'] and mat[x][y + 1] in ['#','$','*']:
+                if mat[x + 1][y + 1] in ['#','$','*']:
+                    return True
+                if mat[x + 1][y] == '#' and mat[x][y + 1] =='#':
+                    return True
+                if mat[x + 1][y] in ['$','*'] and mat[x][y + 1] in ['$','*']:
+                    if mat[x + 1][y - 1] == '#' and mat[x - 1][y + 1] == '#':
+                        return True
+                if mat[x + 1][y] in ['$','*'] and mat[x][y + 1] == '#':
+                    if mat[x + 1][y - 1] == '#':
+                        return True
+                if mat[x + 1][y] == '#' and mat[x][y + 1] in ['$','*']:
+                    if mat[x - 1][y + 1] == '#':
+                        return True
+                    
+        return False
+
