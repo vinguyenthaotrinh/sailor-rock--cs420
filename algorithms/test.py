@@ -17,7 +17,7 @@ def replay_solution(start_board, end_board):
     replay_board = deepcopy(start_board)
     replay_board.print_board()  # In trạng thái bảng cuối cùng
     end_board.dir_list = []
-    st = "luurruuldldddrruuddrruldllluurrurdlllddrruuruldddruulluu"
+    st = "rruuuuruulldrurdldddddlluurlddrruuuurrrurddullluulldrurdldddlldrdruuuurrrurdllluulldrurdldrrr"
     for i in range(len(st)):
         end_board.dir_list.append(st[i])
     for dir in end_board.dir_list:
