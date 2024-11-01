@@ -1,0 +1,8 @@
+# Packages
+bin
+lib
+__pycache__
+
+# Folder
+puzzle/
+
