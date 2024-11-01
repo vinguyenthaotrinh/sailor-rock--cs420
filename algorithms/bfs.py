@@ -46,9 +46,9 @@ def search(board):
         moves = cur_node.moves_available()
         
         for m in moves:
-            child = deepcopy(cur_node)
+            child = cur_node.clone_with_move(m)
             nodes_generated += 1
-            child.move(m)
+            
             if child.is_win():
                 end = time()
                 mem_usage = tracemalloc.get_traced_memory()[1]

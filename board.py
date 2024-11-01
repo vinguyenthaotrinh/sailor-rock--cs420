@@ -96,7 +96,7 @@ class Board:
         index_dir = char_dir.index(move_dir.lower())
         new_board = Board()
         new_board.dir_list = self.dir_list + [move_dir]
-        new_board.stones = self.stone.copy()
+        new_board.stones = self.stones.copy()
         new_board.player = (self.player[0] + dr[index_dir], self.player[1] + dc[index_dir])
         new_board.cost = self.cost + 1
         
