@@ -45,7 +45,8 @@ class Game:
 
     def doSearches(self, board, option):
         if option == 0:
-            test(board)
+            steps = input("Paste your solution here: ")
+            test(board, steps)
         if option == 1:
             bfs(board)
         if option == 2:
@@ -65,6 +66,6 @@ class Game:
         
         file_name = f'levels/input-{level:02}.txt'  # Format level file
         b = self.new_board(file_name)
-        print('\nSolving ' + file_name + '...')
+        print('\nSolving ' + file_name + '...\n')
         self.doSearches(b, option)
     
