@@ -1,8 +1,9 @@
+# game.py
 from manager.board import Board
-import algorithms.bfs as bfs
-import algorithms.dfs as dfs
-import algorithms.ucs as ucs
-import algorithms.test as test
+from algorithms.bfs import search as bfs
+from algorithms.dfs import search as dfs
+from algorithms.ucs import search as ucs
+from algorithms.test import search as test
 
 class Game:
     def new_board(self, file_name):
@@ -44,17 +45,26 @@ class Game:
 
     def doSearches(self, board, option):
         if option == 0:
-            test.search(board)
+            test(board)
         if option == 1:
-            bfs.search(board)
+            bfs(board)
         if option == 2:
-            dfs.search(board)
+            dfs(board)
         if option == 3:
-            ucs.search(board)
-        # if option == 4:
-        #     ass.search(board)
-        if option == 5:  # all get executed
-            bfs.search(board)
-            # dfs.search(board)
-            # ucs.search(board)
-            # ass.search(board)
+            ucs(board)
+
+    def run(self):
+        print("Which algorithm?")
+        print("0) Test")
+        print("1) Breadth first search")
+        print("2) Depth first search")
+        print("3) Uniform cost search")
+        # print("4) A* search")
+        option = int(input("Type a number and press enter: "))
+        level = int(input("Choose a level (from 1 to 10): "))
+        
+        file_name = f'levels/input-{level:02}.txt'  # Format level file
+        b = self.new_board(file_name)
+        print('\nSolving ' + file_name + '...')
+        self.doSearches(b, option)
+    
