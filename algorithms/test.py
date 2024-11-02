@@ -42,8 +42,7 @@ def replay_solution_file(start_board, end_board):
         for dir in end_board.dir_list:
             file.write(f"Move: {dir}\n")
             replay_board.move(dir)
-            # Ghi trạng thái bảng sau mỗi nước đi
-            file.write(replay_board.get_board_as_string() + "\n")  # Giả sử hàm get_board_as_string() trả về trạng thái bảng dưới dạng chuỗi
+            file.write(replay_board.get_board_as_string() + "\n")  
 
 
 def search(board):

@@ -12,6 +12,7 @@ class Board:
     weights = []
     switches = []
     walls = set()  # set of tuples
+    output_file = ""
     
     def __init__(self):
         self.dir_list = []  # list of char for solution
@@ -20,7 +21,7 @@ class Board:
         self.cost = 0  # used for UCS and heuristic searches
 
     @classmethod
-    def configure(cls, weights_list, row_count, col_count, switches_list, walls_set):
+    def configure(cls, output_name, weights_list, row_count, col_count, switches_list, walls_set):
         """
         Thiết lập singleton attributes cho toàn bộ instances
         """
@@ -29,6 +30,7 @@ class Board:
         cls.weights = weights_list
         cls.switches = switches_list
         cls.walls = walls_set
+        cls.output_file = output_name
     
     def __eq__(self, other):
         if self.stones == other.stones and self.player == other.player:

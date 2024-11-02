@@ -1,16 +1,10 @@
 import os
-from game import Game
+from manager.game import Game
 
-'''
-Tests search algos
-Handles command line and user input
-'''
-
-
-def runSearch(s, filename, option):
-    ''' Runs the search based on filename and option selected '''
-    b = s.new_board(filename)
-    print('\nSolving ' + filename + '...')
+def runSearch(s, file_name, option):
+    ''' Runs the search based on file_name and option selected '''
+    b = s.new_board(file_name)
+    print('\nSolving ' + file_name + '...')
     s.doSearches(b, option)
 
 new_game = Game()

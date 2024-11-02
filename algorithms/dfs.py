@@ -1,24 +1,30 @@
 # dfs.py
+from manager.board import Board
 import tracemalloc
 from time import time
 from copy import deepcopy
 
 def print_results(board, gen, dur, mem_usage):
-    print("Algorithm: DFS")
-    print("Steps: {}".format(len(board.dir_list)))
-    print("Total cost: {}".format(board.cost))
-    print("Node: {}".format(gen))
-    print("Time: {:.2f} ms".format(dur * 1000))
-    print("Memory: {:.2f} MB".format(mem_usage / 1024 / 1024))
-    print("Solution: {}".format(''.join(board.dir_list)))
+    with open(Board.output_file, "w") as file:
+        file.write("Algorithm: DFS\n")
+        file.write("Steps: {}\n".format(len(board.dir_list)))
+        file.write("Total cost: {}\n".format(board.cost))
+        file.write("Node: {}\n".format(gen))
+        file.write("Time: {:.2f} ms\n".format(dur * 1000))
+        file.write("Memory: {:.2f} MB\n".format(mem_usage / 1024 / 1024))
+        file.write("Solution: {}".format(''.join(board.dir_list)))
     
 def replay_solution(start_board, end_board):
     replay_board = deepcopy(start_board)
-    replay_board.print_board()  # In trạng thái bảng cuối cùng
-    for dir in end_board.dir_list:
-        # print(dir)
-        replay_board.move(dir)
-        # replay_board.print_board()  # In trạng thái bảng
+    
+    with open("manager/gui.txt", "w") as file:
+        file.write(str(Board.rows) + " " + str(Board.cols) + "\n")
+        file.write(replay_board.get_board_as_string() + "\n")  
+                
+        for dir in end_board.dir_list:
+            file.write(f"Move: {dir}\n")
+            replay_board.move(dir)
+            file.write(replay_board.get_board_as_string() + "\n")  
 
 def search(board):
     start = time()
@@ -38,7 +44,7 @@ def search(board):
     frontier = []
     frontier.append(node)
     reached = set()
-    reached.add(node)
+    reached.add((tuple(node.stones), node.player))
     
     while len(frontier) > 0:
         cur_node = frontier.pop()

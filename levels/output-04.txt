@@ -1,0 +1,7 @@
+Algorithm: BFS
+Steps: 56
+Total cost: 267
+Node: 78560
+Time: 12487.57 ms
+Memory: 9.01 MB
+Solution: luuRRUUddllddrrUUddrruLdllluurrUrDlllddrrUUruLdddrUUllUU

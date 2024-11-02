@@ -1,4 +1,4 @@
-from board import Board
+from manager.board import Board
 import algorithms.bfs as bfs
 import algorithms.dfs as dfs
 import algorithms.ucs as ucs
@@ -37,8 +37,9 @@ class Game:
                     y += 1
                 x += 1
                 y = 0
-                
-            Board.configure(weights_list = weights, row_count = len(lines), col_count =  max([len(line) for line in lines]), switches_list = switches, walls_set = walls)                
+            # make file input...txt -> output...txt
+            file_name = "levels/output" + file_name[-7:]
+            Board.configure(output_name = file_name, weights_list = weights, row_count = len(lines), col_count =  max([len(line) for line in lines]), switches_list = switches, walls_set = walls)                
             return b
 
     def doSearches(self, board, option):

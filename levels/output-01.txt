@@ -1,0 +1,7 @@
+Algorithm: BFS
+Steps: 10
+Total cost: 32
+Node: 263
+Time: 40.91 ms
+Memory: 0.04 MB
+Solution: DuLLrUUdrR
