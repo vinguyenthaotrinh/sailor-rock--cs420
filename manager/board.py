@@ -31,7 +31,7 @@ class Board:
         cls.switches = switches_list
         cls.walls = walls_set
         cls.output_file = output_name
-    
+
     def __eq__(self, other):
         if self.stones == other.stones and self.player == other.player:
             return True
@@ -150,6 +150,7 @@ class Board:
         board_str = '\n'.join(''.join(row) for row in matrix)  # Ghép các hàng thành chuỗi
         board_str += '\n' + "_" * 10  # Thêm dòng ngăn cách phía dưới
         return board_str
+
     
     ''' Check deadlock: stone on the corner of walls or other stones   '''
     def is_deadlock(self):

@@ -3,6 +3,7 @@ from manager.board import Board
 from algorithms.bfs import search as bfs
 from algorithms.dfs import search as dfs
 from algorithms.ucs import search as ucs
+from algorithms.test10 import search as astart
 from algorithms.test import search as test
 
 class Game:
@@ -53,6 +54,8 @@ class Game:
             dfs(board)
         if option == 3:
             ucs(board)
+        if option == 4:
+            astart(board)
 
     def run(self):
         print("Which algorithm?")
@@ -60,7 +63,7 @@ class Game:
         print("1) Breadth first search")
         print("2) Depth first search")
         print("3) Uniform cost search")
-        # print("4) A* search")
+        print("4) A* search")
         option = int(input("Type a number and press enter: "))
         level = int(input("Choose a level (from 1 to 10): "))
         
