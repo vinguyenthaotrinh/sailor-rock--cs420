@@ -127,7 +127,7 @@ def canMoveBox(cur_box, update_pos, matrix):
     return False
         
 def a_star(board, matrix, distance_grid):
-    weighted = 2
+    weighted = 1
     rows, cols = board.rows, board.cols
     rock_weight = board.weights
     goal_positions = board.switches
