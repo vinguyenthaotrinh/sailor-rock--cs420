@@ -9,9 +9,7 @@ import math
 import heapq
 direct = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 directions = [((-1, 0), (1, 0)), ((1, 0), (-1, 0)), ((0, -1), (0, 1)), ((0, 1), (0, -1))]  # trên, dưới, trái, phải
-    
 
-array_2d_debug = [[' ' for i in range(10)] for j in range(10)]
 
 # heuristic: from each position to goals
 def bfs(goal_position, board, distance_grid, matrix,num):
@@ -27,12 +25,11 @@ def bfs(goal_position, board, distance_grid, matrix,num):
             x_box, y_box = x + dx, y + dy
             x_player, y_player = x + 2 * dx, y + 2 * dy
 
-            if 0 <= x_box < rows and 0 <= y_box < cols:
-                if 0 <= x_player < rows and 0 <= y_player < cols:
-                    if distance_grid[x_box][y_box][num] == math.inf:  # not visit
-                        if matrix[x_box][y_box] != "#" and matrix[x_player][y_player] != "#":
-                            distance_grid[x_box][y_box][num] = current_distance + 1
-                            queue.append((x_box, y_box))
+            if 0 <= x_player < rows and 0 <= y_player < cols:
+                if distance_grid[x_box][y_box][num] == math.inf:  # not visit
+                    if matrix[x_box][y_box] != "#" and matrix[x_player][y_player] != "#":
+                        distance_grid[x_box][y_box][num] = current_distance + 1
+                        queue.append((x_box, y_box))
 
 
 # Tiền xử lý để tìm tất cả các vị trí đích và hộp, cũng như đánh dấu các ô bế tắc
@@ -127,19 +124,9 @@ def canMoveBox(cur_box, update_pos, matrix):
             if matrix[x_pre][y_pre] != "#" and ((x_pre, y_pre) not in update_pos): # đằng trước trống -> pre trống
                 return True
     return False
-
-
-def printDebug(array_2d_debug, box_positions, player_position):
-    copy_lines = [row.copy() for row in array_2d_debug]
-    for x, y in box_positions:
-        copy_lines[x][y] = '$'
-    px, py = player_position
-    copy_lines[px][py] = '@'
-    for line in copy_lines:
-        print("".join(line))
         
 def a_star(board, matrix, distance_grid):
-
+    weighted = 2
     rows, cols = board.rows, board.cols
     rock_weight = board.weights
     goal_positions = board.switches
@@ -147,6 +134,7 @@ def a_star(board, matrix, distance_grid):
     
     open_set = []
     came_from = {}
+    gen = 1
 
     start_ver = (board.player, tuple(box_pos))
     h_score_start = heuristic(rock_weight, distance_grid, box_pos)[0]
@@ -161,15 +149,18 @@ def a_star(board, matrix, distance_grid):
         cur_player, cur_boxes = current_ver
 
         x, y = cur_player
-        if terminal(cur_boxes, goal_positions): 
-            return reconstruct_path(came_from, current_ver, board.player)
+        if terminal(cur_boxes, goal_positions):
+            path, cost = reconstruct_path(came_from, current_ver, start_ver)
+            return path, cost, gen
 
         for dx, dy in direct:
             x_next, y_next = x + dx, y + dy
             x_fur, y_fur = x + 2 * dx, y + 2 * dy
             canGo = False
             if 0 <= x_next < rows and 0 <= y_next < cols:
-                g_score_cur = g_score[current_ver] + 1
+                g_score_pre = g_score[current_ver]
+                g_score_cur = g_score_pre + 1
+                gen += 1
                 
                 if (x_next, y_next) in cur_boxes:       # if box
                     if (x_fur, y_fur) not in cur_boxes and matrix[x_fur][y_fur] != "#" and matrix[x_fur][y_fur] != "x": # if can go
@@ -186,54 +177,67 @@ def a_star(board, matrix, distance_grid):
                     h_score_cur = h_score[successor_ver[1]] + playerToBox((x_next, y_next), cur_boxes)
                     
                 if canGo:
-                    f_score_cur = g_score_cur + 2 * h_score_cur
+                    f_score_cur = g_score_cur + weighted * h_score_cur
                     if (successor_ver not in visited) or (f_score_cur < (visited[successor_ver])):
                         visited[successor_ver] = f_score_cur
                         g_score[successor_ver] = g_score_cur
                         heapq.heappush(open_set, (f_score_cur, successor_ver))
-                        came_from[successor_ver] = current_ver
+                        came_from[successor_ver] = (current_ver, g_score_cur - g_score_pre)
+    tracemalloc.stop()
     return None  # Không tìm thấy đường đi
 
 
-def reconstruct_path(came_from, current, start):
-    n = 0
+def reconstruct_path(came_from, current, start_ver):
     path = []
-    while current in came_from:
-        path.append(current[0])
-        current = came_from[current]
-        n += 1
-    path.append(start)
+    cost = 0
+    while current != start_ver:
+        path.append(current)
+        current, cost_tmp = came_from[current]
+        cost += cost_tmp
+        
+    path.append(start_ver)
     path.reverse()
-    return path, n
+    return path, cost
 
 
 def get_directions(coords):
     move = []
     for i in range(1, len(coords)):
+        #print(coords)
         prev = coords[i - 1]
         curr = coords[i]
-        if curr[0] == prev[0] - 1 and curr[1] == prev[1]:
+
+        if curr[0][0] == prev[0][0] - 1 and curr[0][1] == prev[0][1]:
             if curr[1] == prev[1]:
                 move.append("u")
             else:
                 move.append("U")
-        elif curr[0] == prev[0] + 1 and curr[1] == prev[1]:
+        elif curr[0][0] == prev[0][0] + 1 and curr[0][1] == prev[0][1]:
             if curr[1] == prev[1]:
                 move.append("d")
             else:
                 move.append("D")
-        elif curr[0] == prev[0] and curr[1] == prev[1] + 1:
+        elif curr[0][0] == prev[0][0] and curr[0][1] == prev[0][1] + 1:
             if curr[1] == prev[1]:
                 move.append("r")
             else:
                 move.append("R")
-        elif curr[0] == prev[0] and curr[1] == prev[1] - 1:
+        elif curr[0][0] == prev[0][0] and curr[0][1] == prev[0][1] - 1:
             if curr[1] == prev[1]:
                 move.append("l")
             else:
                 move.append("L")
     return ''.join(move)
 
+def print_results(cost, gen, dur, mem_usage, move):
+    with open(Board.output_file, "w") as file:
+        file.write("Algorithm: A*\n")
+        file.write("Steps: {}\n".format(len(move)))
+        file.write("Total cost: {}\n".format(cost))
+        file.write("Node: {}\n".format(gen))
+        file.write("Time: {:.2f} ms\n".format(dur * 1000))
+        file.write("Memory: {:.2f} MB\n".format(mem_usage / 1024 / 1024))
+        file.write("Solution: {}".format(move))
 
 
 def search(board):
@@ -242,16 +246,16 @@ def search(board):
     nodes_generated = 0
 
     matrix = board.get_matrix()
-
+    # preprocessing
     matrix, distance_grid= preProcessing(board, matrix)
-
-    n = 0
-    path, n = a_star(board, matrix, distance_grid)
-
+    # a star search
+    path, cost, gen = a_star(board, matrix, distance_grid)
+    # get dir
     move = get_directions(path)
-    print(move)
-    print(len(move))
-
-                
-    #tracemalloc.stop()
+    
+    end = time()
+    mem_usage = tracemalloc.get_traced_memory()[1]
+    tracemalloc.stop()
+            
+    print_results(cost, gen, end - start, mem_usage, move)
     return
