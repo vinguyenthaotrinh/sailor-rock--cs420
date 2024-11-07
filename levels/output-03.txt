@@ -1,7 +1,0 @@
-Algorithm: UCS
-Steps: 30
-Total cost: 65
-Node: 2400
-Time: 160.60 ms
-Memory: 0.21 MB
-Solution: lddRRRlllddrrrruUUdlllluurrrRR

@@ -3,7 +3,7 @@ from manager.board import Board
 from algorithms.bfs import search as bfs
 from algorithms.dfs import search as dfs
 from algorithms.ucs import search as ucs
-from algorithms.test10 import search as astart
+from algorithms.test10 import search as astar
 from algorithms.test import search as test
 
 class Game:
@@ -44,18 +44,15 @@ class Game:
             Board.configure(output_name = file_name, weights_list = weights, row_count = len(lines), col_count =  max([len(line) for line in lines]), switches_list = switches, walls_set = walls)                
             return b
 
-    def doSearches(self, board, option):
-        if option == 0:
-            steps = input("Paste your solution here: ")
-            test(board, steps)
-        if option == 1:
-            bfs(board)
-        if option == 2:
-            dfs(board)
-        if option == 3:
-            ucs(board)
-        if option == 4:
-            astart(board)
+    def doSearches(self, board, algorithm, is_selected):
+        if algorithm == 1:
+            bfs(board, is_selected)
+        if algorithm == 2:
+            dfs(board, is_selected)
+        if algorithm == 3:
+            ucs(board, is_selected)
+        if algorithm == 4:
+            astar(board, is_selected)
 
     def run(self):
         print("Which algorithm?")
@@ -68,7 +65,8 @@ class Game:
         level = int(input("Choose a level (from 1 to 10): "))
         
         file_name = f'levels/input-{level:02}.txt'  # Format level file
-        b = self.new_board(file_name)
         print('\nSolving ' + file_name + '...\n')
-        self.doSearches(b, option)
+        for i in range(1, 5):
+            b = self.new_board(file_name)
+            self.doSearches(b, i, i == option)
     

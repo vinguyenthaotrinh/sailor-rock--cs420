@@ -5,8 +5,8 @@ from time import time
 from copy import deepcopy
 
 def print_results(board, gen, dur, mem_usage):
-    with open(Board.output_file, "w") as file:
-        file.write("Algorithm: DFS\n")
+    with open(Board.output_file, "a") as file:
+        file.write("\n\nAlgorithm: DFS\n")
         file.write("Steps: {}\n".format(len(board.dir_list)))
         file.write("Total cost: {}\n".format(board.cost))
         file.write("Node: {}\n".format(gen))
@@ -14,19 +14,22 @@ def print_results(board, gen, dur, mem_usage):
         file.write("Memory: {:.2f} MB\n".format(mem_usage / 1024 / 1024))
         file.write("Solution: {}".format(''.join(board.dir_list)))
     
-def replay_solution(start_board, end_board):
+def replay_solution(start_board, dir_list):
     replay_board = deepcopy(start_board)
     
     with open("manager/gui.txt", "w") as file:
-        file.write(str(Board.rows) + " " + str(Board.cols) + "\n")
-        file.write(replay_board.get_board_as_string() + "\n")  
+        file.write("Path: " + ''.join(dir_list) + "\n\n")
+        file.write(f"Step 1:\n")
+        file.write(replay_board.get_board_as_string() + "\n")
                 
-        for dir in end_board.dir_list:
-            file.write(f"Move: {dir}\n")
+        cnt = 1
+        for dir in dir_list:
+            cnt += 1
+            file.write(f"Step {cnt}: {dir}\n")
             replay_board.move(dir)
             file.write(replay_board.get_board_as_string() + "\n")  
 
-def search(board):
+def search(board, is_selected):
     start = time()
     tracemalloc.start()  # Bắt đầu theo dõi bộ nhớ
     nodes_generated = 0
@@ -35,7 +38,8 @@ def search(board):
         end = time()
         mem_usage = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
-        replay_solution(board, board)
+        if is_selected:
+            replay_solution(board, cur_node.dir_list)
         print_results(board, 1, end - start, mem_usage)
         return board
     
@@ -57,12 +61,13 @@ def search(board):
                 end = time()
                 mem_usage = tracemalloc.get_traced_memory()[1]
                 tracemalloc.stop()
-                replay_solution(board, child)
+                if is_selected:
+                    replay_solution(board, cur_node.dir_list)
                 print_results(child, nodes_generated, end - start, mem_usage)
                 return child
-            if not child.is_deadlock() and child not in reached:
+            if not child.is_deadlock() and (tuple(child.stones), child.player) not in reached:
                 frontier.append(child)
-                reached.add(child)
+                reached.add((tuple(child.stones), child.player))
     
     tracemalloc.stop()
     print("Solution not found")

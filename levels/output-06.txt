@@ -1,7 +1,0 @@
-Algorithm: UCS
-Steps: 185
-Total cost: 803
-Node: 744488
-Time: 57037.10 ms
-Memory: 75.96 MB
-Solution: drruLdlluurDldRuluuuurrddLrrrurrdLLLLuulldDDrdrrrrUdlllluluuurrddrDururrdLddlLuuRurDllluullddRdddlUUruRRddLruulldlddrUrrdLruuuRurrdLLLLuulldDDDrrrrrUdlluulLruulldDDurrrrurrdLLLLLruulldD
