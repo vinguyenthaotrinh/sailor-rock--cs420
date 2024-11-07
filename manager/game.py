@@ -3,7 +3,7 @@ from manager.board import Board
 from algorithms.bfs import search as bfs
 from algorithms.dfs import search as dfs
 from algorithms.ucs import search as ucs
-from algorithms.test10 import search as astar
+from algorithms.astar import search as astar
 class Game:
     def new_board(self, file_name):
         e = []  # empty solution list
@@ -64,7 +64,7 @@ class Game:
         
         file_name = f'levels/input-{level:02}.txt'  # Format level file
         print('\nSolving ' + file_name + '...\n')
-        for i in range(1, 4):
+        for i in range(1, 5):
             b = self.new_board(file_name)
             self.doSearches(b, i, i == option)
     

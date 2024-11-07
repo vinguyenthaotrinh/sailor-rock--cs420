@@ -4,6 +4,7 @@ from scipy.optimize import linear_sum_assignment
 import numpy as np
 from time import time
 from manager.board import Board
+from copy import deepcopy
 import tracemalloc
 import math
 import heapq
@@ -99,7 +100,7 @@ def deadlock(cur_pos,update_boxes, matrix, visited):
         return True
     if matrix[x][y] != "#" and (x,y) not in update_boxes:
         return False
-    if visited == 2:      # đã check thì block
+    if visited == 3:      # đã check thì block
         return True
     if (x, y) in update_boxes:
         if canMoveBox(cur_pos, update_boxes, matrix):
@@ -230,7 +231,8 @@ def get_directions(coords):
     return ''.join(move)
 
 def print_results(cost, gen, dur, mem_usage, move):
-    with open(Board.output_file, "w") as file:
+    with open(Board.output_file, "a") as file:
+        file.write("\n\n")
         file.write("Algorithm: A*\n")
         file.write("Steps: {}\n".format(len(move)))
         file.write("Total cost: {}\n".format(cost))
@@ -239,8 +241,21 @@ def print_results(cost, gen, dur, mem_usage, move):
         file.write("Memory: {:.2f} MB\n".format(mem_usage / 1024 / 1024))
         file.write("Solution: {}".format(move))
 
+def replay_solution(start_board, dir_list):
+    replay_board = deepcopy(start_board)
+    
+    with open("manager/gui.txt", "w") as file:
+        file.write("Path: " + (''.join(dir_list)).lower() + "\n")
+                
+        cnt = 0
+        for dir in dir_list:
+            cnt += 1
+            file.write(f"Step {cnt}: {dir}\n")
+            replay_board.move(dir)
+            file.write(replay_board.get_board_as_string() + "\n")
+            
 
-def search(board):
+def search(board, is_selected):
     start = time()
     tracemalloc.start()
     nodes_generated = 0
@@ -256,6 +271,8 @@ def search(board):
     end = time()
     mem_usage = tracemalloc.get_traced_memory()[1]
     tracemalloc.stop()
+    if is_selected:
+        replay_solution(board, move)
             
     print_results(cost, gen, end - start, mem_usage, move)
     return
