@@ -203,6 +203,7 @@ def draw_map_items(mapObj):
     mapSurf.fill(PINK)
     mapSurfRect = mapSurf.get_rect()
     mapSurfRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
+    print(f"MapObj size: {len(mapObj[0])} x {len(mapObj)}")
     print(f"Map surface size: {mapSurf.get_width()} x {mapSurf.get_height()}")
 
 
@@ -247,7 +248,7 @@ def load_map_steps(filename="outputgui.txt"):
     reading_map = False
 
     for line in lines:
-        line = line.rstrip()
+        line = line.rstrip('\n')
         if line.startswith("Step"):
             if current_map:
                 steps.append(current_map)

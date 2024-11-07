@@ -19,11 +19,9 @@ def replay_solution(start_board, dir_list):
     replay_board = deepcopy(start_board)
     
     with open("manager/gui.txt", "w") as file:
-        file.write("Path: " + ''.join(dir_list) + "\n\n")
-        file.write(f"Step 1:\n")
-        file.write(replay_board.get_board_as_string() + "\n")
+        file.write("Path: " + (''.join(dir_list)).lower() + "\n")
                 
-        cnt = 1
+        cnt = 0
         for dir in dir_list:
             cnt += 1
             file.write(f"Step {cnt}: {dir}\n")
