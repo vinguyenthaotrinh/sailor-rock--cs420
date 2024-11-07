@@ -1,0 +1,7 @@
+Algorithm: UCS
+Steps: 23
+Total cost: 73
+Node: 53396
+Time: 2134.54 ms
+Memory: 4.60 MB
+Solution: ullDLdRuurrdLLrrddlUruL

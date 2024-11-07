@@ -1,7 +1,7 @@
-Algorithm: BFS
-Steps: 16
-Total cost: 612
-Node: 21494
-Time: 1289.51 ms
-Memory: 2.73 MB
-Solution: uLulDrrrRRRRRurD
+Algorithm: UCS
+Steps: 25
+Total cost: 529
+Node: 132037
+Time: 5262.86 ms
+Memory: 9.03 MB
+Solution: uulDldRRRRRRRRllluLLLLulD

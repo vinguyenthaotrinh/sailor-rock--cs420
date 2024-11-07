@@ -1,7 +1,7 @@
-Algorithm: BFS
+Algorithm: UCS
 Steps: 56
 Total cost: 267
-Node: 78560
-Time: 12889.64 ms
-Memory: 9.13 MB
-Solution: luuRRUUddllddrrUUddrruLdllluurrUrDlllddrrUUruLdddrUUllUU
+Node: 67860
+Time: 2910.05 ms
+Memory: 7.60 MB
+Solution: luuRRUUdldlddrrUUddrruLdllluurrUrDlllddrrUUruLdddrUUllUU
