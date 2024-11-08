@@ -38,7 +38,7 @@ def search(board, is_selected):
         mem_usage = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
         if is_selected:
-            replay_solution(board, cur_node.dir_list)
+            replay_solution(board, board.dir_list)
         print_results(board, 1, 0, 0, 1, end - start, mem_usage)
         return board
     

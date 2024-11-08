@@ -38,7 +38,7 @@ def search(board, is_selected):
         mem_usage = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
         if is_selected:
-            replay_solution(board, cur_node.dir_list)
+            replay_solution(board, board.dir_list)
         print_results(board, 1, end - start, mem_usage)
         return board
     
@@ -62,7 +62,7 @@ def search(board, is_selected):
                 mem_usage = tracemalloc.get_traced_memory()[1]
                 tracemalloc.stop()
                 if is_selected:
-                    replay_solution(board, cur_node.dir_list)
+                    replay_solution(board, child.dir_list)
                 print_results(child, nodes_generated, end - start, mem_usage)
                 return child
             if not child.is_deadlock() and (tuple(child.stones), child.player) not in reached:
