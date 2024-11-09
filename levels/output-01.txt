@@ -1,0 +1,31 @@
+Algorithm: BFS
+Steps: 9
+Total cost: 24
+Node: 295
+Time: 1.61 ms
+Memory: 0.04 MB
+Solution: ulllldRRR
+
+Algorithm: DFS
+Steps: 11
+Total cost: 36
+Node: 174
+Time: 0.00 ms
+Memory: 0.01 MB
+Solution: llLdlluRRRR
+
+Algorithm: UCS
+Steps: 9
+Total cost: 24
+Node: 769
+Time: 31.36 ms
+Memory: 0.04 MB
+Solution: ldllluRRR
+
+Algorithm: A*
+Steps: 9
+Total cost: 24
+Node: 113
+Time: 13.63 ms
+Memory: 0.01 MB
+Solution: llulldRRR

@@ -1,0 +1,31 @@
+Algorithm: BFS
+Steps: 23
+Total cost: 73
+Node: 42936
+Time: 1502.47 ms
+Memory: 4.30 MB
+Solution: ullDLdRuurrdLLrrddlUruL
+
+Algorithm: DFS
+Steps: 799
+Total cost: 1761
+Node: 89503
+Time: 3293.68 ms
+Memory: 8.52 MB
+Solution: dllllluurrrrDrdLruulllllddrrRllluurrrDrrddlUruLdLrruulllllddrRRllluurrrrrdddlUruulllDldRRllluurrrrrddLruulDLrrddlUruLdLrruulllllddrRRllluurrrrrdddlUruulllDldRRllluurrrrrddLruulDLrrddlUruLdLrruulllllddrRRllluurrrrrdddlUruulllDldRRllluurrrrrddLLrruulDLrrddlUruulllllddrRRllluurrDrdLruurrdLrdLruulllddRlulldRluurrrrdLrrddlUruulllllddrRRllluurrDrdLruurrdLrdLruulllddRlulldRluurrrrdLrrddlUruulllllddrRRllluurrDrdLruurrdLrdLruulllddRluurDrrddlUruLLLdRluurrrdddlUruLLulllddRRRllluurrrrrddLruullllDRRldRlulldRRlluurrrrrdLrddlUruulllllddrrRllluurrrDurrdLrddlUruulllllddrrRllluurrrDurrdLrddlULrruulDLrrddlUruLdlLrrruulllllddRRRllluurrrrrdddlUruulllDurrDLrrddlUruulllllddrRRllluurrDrdLruurrdLrdLruulllddRlulldRluurrrrdLrrddlUruLdlLrrruulllllddRRRllluurrrrrdddlUruullDLrurrdLLrdLrruulllllddrRRllluurrrrrdddlUruL
+
+Algorithm: UCS
+Steps: 23
+Total cost: 73
+Node: 53396
+Time: 1990.88 ms
+Memory: 4.37 MB
+Solution: ullDLdRuurrdLLrrddlUruL
+
+Algorithm: A*
+Steps: 23
+Total cost: 73
+Node: 1209
+Time: 0.00 ms
+Memory: 0.08 MB
+Solution: ullDLdRuurrdLLrrddlUruL
