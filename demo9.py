@@ -399,6 +399,8 @@ def runLevel(level_index, player):
     levelRect = levelSurf.get_rect()
     levelRect.bottomleft = (20, WINHEIGHT - 35)
     draw_game(mapObj, max_width, max_height, player)
+    for m in mapObj:
+        print(m)
     return max_width, max_height, level_index
 
 def run(levels, level_index):
@@ -541,6 +543,7 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                print("!")
                 if buttons['Run'].collidepoint(event.pos):
                     run_clicked = True  # Start automatic movement after "Run" is clicked
                     button_states['Run'] = not button_states['Run']
@@ -556,6 +559,7 @@ def main():
                     if rect.collidepoint(event.pos):
                         current_level_index = handle_level_selection(event)
                         runLevel(current_level_index, player)
+                        break
                 draw_level_bar()
     
         draw_buttons()
