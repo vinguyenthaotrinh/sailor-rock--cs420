@@ -1,0 +1,31 @@
+Algorithm: BFS
+Steps: 29
+Total cost: 302
+Node: 1967
+Time: 110.45 ms
+Memory: 0.19 MB
+Solution: ullluuullllldddrRRRRRRRRRRRRR
+
+Algorithm: DFS
+Steps: 35
+Total cost: 350
+Node: 222
+Time: 12.10 ms
+Memory: 0.02 MB
+Solution: ulllllLrrruuullllldddRRRRRRRRRRRRRR
+
+Algorithm: UCS
+Steps: 29
+Total cost: 302
+Node: 3737
+Time: 172.97 ms
+Memory: 0.20 MB
+Solution: ullluuullllldddrRRRRRRRRRRRRR
+
+Algorithm: A*
+Steps: 29
+Total cost: 302
+Node: 777
+Time: 15.63 ms
+Memory: 0.05 MB
+Solution: ullluuullllldddrRRRRRRRRRRRRR
