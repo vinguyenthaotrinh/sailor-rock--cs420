@@ -211,9 +211,12 @@ def start_screen():
 
 def draw_map_items(mapObj, max_width, max_height):
     """Draws the map items"""
-
+    for m in mapObj:
+        print(m)
     map_width = len(mapObj[0]) * TILE_SIZE
     map_height = len(mapObj) * TILE_SIZE
+    print(map_width)
+    print(map_height)
     
     mapSurf = pygame.Surface((map_width, map_height))
     
@@ -533,6 +536,8 @@ def main():
         screen.fill(PINK)
    
         draw_buttons()
+        #print(max_width)
+        #print(max_height)
         draw_game(mapObj, max_width, max_height, player)
         #time.sleep(2)
         draw_level_bar()
