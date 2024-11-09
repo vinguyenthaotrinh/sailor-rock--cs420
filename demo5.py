@@ -491,7 +491,7 @@ def handle_level_selection(event):
 
             #levels[current_level_index]['mapObj'] = mapObj
             #runLevel(levels, current_level_index, max_width, max_height)  # Chạy level đã chọn
-            runLevel(current_level_index, levels)
+            runLevel(levels, current_level_index)
 
 
 def main():
@@ -512,7 +512,7 @@ def main():
     max_height = len(mapObj)
 
     player = Player()
-    runLevel(current_level_index, levels)  # Run the first level
+    runLevel(levels, current_level_index)  # Run the first level
 
     #runLevel(levels, current_level_index, max_width, max_height)  # Pass max_width and max_height here
 
