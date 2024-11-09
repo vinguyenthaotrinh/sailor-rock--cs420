@@ -574,12 +574,8 @@ def main():
         screen.fill(PINK)
    
         draw_buttons()
-        if update:
-            runLevel(levels, current_level_index)
-            update = False
-
         draw_game(mapObj, max_width, max_height, player)
-        time.sleep(2)
+        #time.sleep(2)
         draw_level_bar()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -591,12 +587,16 @@ def main():
                     button_states['Run'] = not button_states['Run']
                     run(levels, current_level_index)
     
+                # can not go any function here
                 for name, rect in buttons.items():
+                    print("2")
                     if buttons[name].collidepoint(event.pos):
+                        print("??")
                         button_states[name] = not button_states[name]
                     elif rect.collidepoint(event.pos):
+                        print("change")
                         current_level_index = handle_level_selection(event)
-                        update = True
+                        runLevel(levels, current_level_index)
 
         for i, button in enumerate(level_buttons):
             pygame.draw.rect(screen, PINK, button['rect'])
