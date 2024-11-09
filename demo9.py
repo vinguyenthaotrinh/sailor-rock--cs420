@@ -100,7 +100,7 @@ TILEMAPPING = {
 # Thêm vào các thiết lập cho thanh level bar và các nút level
 level_bar_image = load_and_scale_image('ele_level/level_bar.png', 146.5, 30)  # Thanh bar cho level
 level_buttons = [
-    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 666.9, 20), 'selected': False} for i in range(9)
+    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 666.9, 20), 'selected': False, 'visible': True} for i in range(9)
 ] 
 
 current_level_index = 0  # Chỉ số level hiện tại
@@ -155,17 +155,21 @@ def draw_level_bar():
     
     # Hiển thị các nút level
     for i, button in enumerate(level_buttons):
-        image = load_and_scale_image('ele_level/level_bar.png', 10, 10) if button['selected'] else load_and_scale_image('ele_level/level.png', 10, 15)
-        screen.blit(image, button['rect'].topright)
+        if button['visible']:
+            image = load_and_scale_image('ele_level/level_bar.png', 10, 10) if button['selected'] else load_and_scale_image('ele_level/level.png', 10, 15)
+            screen.blit(image, button['rect'].topright)
 
-        if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
-            if button['rect'].collidepoint(pygame.mouse.get_pos()):
-                # Update selected level
-                for btn in level_buttons:
-                    btn['selected'] = False
-                button['selected'] = True
-                global current_level_index
-                current_level_index = i  # Set the current level index to the selected button
+            if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
+                if button['rect'].collidepoint(pygame.mouse.get_pos()):
+                    # Update selected level
+                    for btn in level_buttons:
+                        btn['selected'] = False
+                        btn['visible'] = True  # Reset tất cả nút về trạng thái hiển thị
+                    button['selected'] = True
+                    button['visible'] = False  # Ẩn nút đã chọn
+
+                    global current_level_index
+                    current_level_index = i  # Set the current level index to the selected button
     if not level_bar_image:
         print("Level bar image not loaded.")
 
@@ -176,6 +180,9 @@ def draw_buttons():
     for name, rect in buttons.items():
         image = button_images[name]['selected'] if button_states[name] else button_images[name]['unselected']
         screen.blit(image, rect.topleft)
+    #for button in level_buttons:
+        #if button['visible']:  # Chỉ vẽ nút nếu 'visible' là True
+            #pygame.draw.rect(screen, (0, 255, 0), button['rect'])
 
 def start_screen():
     """Displays the start screen with a start button."""
@@ -532,7 +539,9 @@ def handle_level_selection(event):
             # Đặt trạng thái selected cho nút được nhấn
             for btn in level_buttons:
                 btn['selected'] = False
+                btn['visible'] = True
             button['selected'] = True
+            button['visible'] = False
             current_level_index = i  # Cập nhật level hiện tại
             print(f"Selected Level: {current_level_index + 1}")
             return current_level_index
@@ -596,12 +605,10 @@ def main():
                     if rect.collidepoint(event.pos):
                         current_level_index = handle_level_selection(event)
                         runLevel(levels, current_level_index, player)
+                draw_level_bar()
 
-        for i, button in enumerate(level_buttons):
-            pygame.draw.rect(screen, PINK, button['rect'])
-            text = BASICFONT.render(f"Level {i + 1}", True, (255, 255, 255))
-            screen.blit(text, (button['rect'].x + 5, button['rect'].y + 5))
-    
+
+  
         #while current_level_index < total_levels:
              #runLevel(levels, current_level_index)
              #current_level_index +=1
@@ -614,7 +621,6 @@ def main():
         #player.update()
 
         #draw_game(game_state, sprites[DOWN][0], levels[0]['mapObj'])       
-        draw_level_bar()
         draw_buttons()
         #pygame.display.update()
         FPSCLOCK.tick(FPS)
