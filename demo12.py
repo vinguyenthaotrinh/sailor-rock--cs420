@@ -471,7 +471,7 @@ def run(levels, level_index):
                 sys.exit()
       
         if (current_step >= len(path)):
-            return mapObj
+            return mapObj, player
 
         # Automatically move the player along the path with a 1-second interval between steps
         if current_step < len(path) and not player.is_moving:
@@ -497,7 +497,7 @@ def run(levels, level_index):
         draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
 
         #draw_game(game_state, player, mapObj)  # Draw the updated game state
-    return mapObj
+    return mapObj, player
 
 def handle_level_selection(event):
     """Xử lý khi nhấn chọn level."""
@@ -557,7 +557,7 @@ def main():
                 if buttons['Run'].collidepoint(event.pos):
                     run_clicked = True  # Start automatic movement after "Run" is clicked
                     button_states['Run'] = not button_states['Run']
-                    mapObj = run(levels, current_level_index)
+                    mapObj, player = run(levels, current_level_index)
 
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
