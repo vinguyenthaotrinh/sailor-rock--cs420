@@ -360,19 +360,12 @@ def load_all_levels():
 levels = load_all_levels()
 
 
-#def runLevel(levels, level_index, max_width, max_height):
-def runLevel(levels, level_index, player):
-    if level_index >= len(levels):
-        return
-    levelObj = levels[level_index]
-    #mapObj = load_map_from_file(level_index)
-    #max_width = max(len(row) for row in mapObj)
-    #max_height = len(mapObj)
+def runLevel(level_index, player):
 
-    path = load_path_from_file()
-    map_steps = load_map_steps()  # Load các bước map
-    current_step = 0
-    mapObj = levelObj['mapObj']
+    #mapObj = load_map_from_file(level_index)
+    print (levels[level_index])
+    levelObj = levels[level_index]
+    mapObj = levelObj['mapObj']  # Retrieve the map object from the level
 
     player_start_x, player_start_y = levelObj['startState']['player']
     try:
@@ -394,12 +387,10 @@ def runLevel(levels, level_index, player):
 
    
     # Convert tile coordinates to screen pixels
-    #player.rect.center = ((player_start_x - 1) * TILE_SIZE, (player_start_y + 1) * TILE_SIZE)
     player.rect.center = (mapSurfRect.left + (player_start_x * TILE_SIZE)+25, mapSurfRect.top + (player_start_y * TILE_SIZE)+25)
     print(f"Player start position in tiles: {player_start_x}, {player_start_y}")
     print(f"Player start position in pixels: {player.rect.topleft}")
 
-    #game_state = {'player': (levelObj['startState']['player'][0], levelObj['startState']['player'][1])}
 
     clock = pygame.time.Clock()
     last_move_time = pygame.time.get_ticks()  # Track time for step intervals
@@ -407,9 +398,7 @@ def runLevel(levels, level_index, player):
     levelSurf = BASICFONT.render('Level %s of %s' % (level_index + 1, 10), 1, TEXTCOLOR)
     levelRect = levelSurf.get_rect()
     levelRect.bottomleft = (20, WINHEIGHT - 35)
-    run_clicked = False  # Track if "Run" has been clicked
-
-    #draw_game(game_state, player, mapObj)  # Draw the updated game state
+    draw_game(mapObj, max_width, max_height, player)
     return max_width, max_height, level_index
 
 def run(levels, level_index):
@@ -490,46 +479,12 @@ def run(levels, level_index):
                 last_move_time = current_time  # Cập nhật thời gian di chuyển
                 current_step += 1     
         player.update()  # Update player position for smooth animation
-        #draw_game(levelObj, player, mapObj, max_width, max_height)
+ 
         #draw_game(mapObj, max_width, max_height)
         draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
 
         #draw_game(game_state, player, mapObj)  # Draw the updated game state
     return max_width, max_height, level_index
-
-def readLevelsFile(filename):
-    assert os.path.exists(filename), f'Cannot find the level file: {filename}'
-    mapFile = open(filename, 'r')
-    content = mapFile.readlines() + ['\r\n']
-    mapFile.close()
-
-    mapTextLines = []
-    max_width = 0
-    max_height = 0
-    for line in content:
-        line = line.rstrip('\r\n')
-        if ';' in line:
-            line = line[:line.find(';')]
-        if line != '':
-            mapTextLines.append(line)
-        elif line == '' and len(mapTextLines) > 0:
-            max_width = max(len(line) for line in mapTextLines)
-            max_height = len(mapTextLines)
-            for i in range(len(mapTextLines)):
-                mapTextLines[i] += ' ' * (max_width - len(mapTextLines[i]))
-
-            mapObj = [list(row) for row in mapTextLines]
-            startx = starty = None
-            for y, row in enumerate(mapObj):
-                for x, tile in enumerate(row):
-                    if tile == '@' or tile =='+':
-                        startx, starty = x, y
-                        mapObj[x][y] = ' '
-
-            levels.append({'mapObj': mapObj, 'startState': {'player': (startx, starty)}})
-            mapTextLines = []
-
-    return levels, max_width, max_height  # Ensure all three values are returned
 
 def handle_level_selection(event):
     """Xử lý khi nhấn chọn level."""
@@ -558,7 +513,7 @@ def main():
 
     #levels, max_width, max_height = readLevelsFile('levels/input-01.txt')  # Đọc file level và lấy kích thước bản đồ
     current_level_index = 0
-    runLevel(levels, current_level_index, player)
+    runLevel(current_level_index, player)
 
     total_levels = 10  # Number of levels
     mapObj = load_map_from_file(current_level_index)
@@ -567,10 +522,6 @@ def main():
 
 
 
-    #runLevel(levels, current_level_index, max_width, max_height)  # Pass max_width and max_height here
-
-    # Initialize the game state
-    #game_state = {'player': (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)}
 
     # Main game loop
     running = True
@@ -604,23 +555,9 @@ def main():
                     rect = button['rect']  # Lấy đối tượng rect từ từ điển
                     if rect.collidepoint(event.pos):
                         current_level_index = handle_level_selection(event)
-                        runLevel(levels, current_level_index, player)
+                        runLevel(current_level_index, player)
                 draw_level_bar()
-
-
-  
-        #while current_level_index < total_levels:
-             #runLevel(levels, current_level_index)
-             #current_level_index +=1
-
-
-        
-        # After the level completes, move to the next level
-        #current_level_index += 1
-     
-        #player.update()
-
-        #draw_game(game_state, sprites[DOWN][0], levels[0]['mapObj'])       
+    
         draw_buttons()
         #pygame.display.update()
         FPSCLOCK.tick(FPS)
