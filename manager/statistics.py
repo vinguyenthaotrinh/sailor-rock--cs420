@@ -63,7 +63,7 @@ def plot_comparison(test_files):
         # Lưu biểu đồ vào thư mục manager/
         if not os.path.exists('manager'):
             os.makedirs('manager')
-        plt.savefig(f'manager/{metric.lower()}_comparison.png')
+        plt.savefig(f'manager/{metric.lower().replace(" ", "_")}_comparison.png', bbox_inches='tight', pad_inches=0.1)
         plt.close()
 
 # Tạo danh sách các file output từ output-01.txt đến output-12.txt
