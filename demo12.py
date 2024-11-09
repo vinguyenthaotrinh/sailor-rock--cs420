@@ -553,11 +553,31 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print("!")
                 if buttons['Run'].collidepoint(event.pos):
                     run_clicked = True  # Start automatic movement after "Run" is clicked
                     button_states['Run'] = not button_states['Run']
                     run(levels, current_level_index)
+
+                if buttons['A*'].collidepoint(event.pos):
+                    button_states['A*'] = not button_states['A*']
+                    #IMPLEMENT A*
+
+                elif buttons['BFS'].collidepoint(event.pos):
+                    button_states['BFS'] = not button_states['BFS']
+                    #IMPLEMENT BFS
+
+                elif buttons['DFS'].collidepoint(event.pos):
+                    button_states['DFS'] = not button_states['DFS']
+                    #IMPLEMENT DFS
+
+                elif buttons['UCS'].collidepoint(event.pos):
+                    button_states['UCS'] = not button_states['UCS']
+                    #IMPLEMENT UCS
+
+                if buttons['Reset'].collidepoint(event.pos):
+                    button_states['Reset'] = not button_states['Reset']
+                    run(levels, 0)
+    
     
                 # can not go any function here
                 for name, rect in buttons.items():
