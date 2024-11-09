@@ -42,15 +42,15 @@ class Game:
             Board.configure(output_name = file_name, weights_list = weights, row_count = len(lines), col_count =  max([len(line) for line in lines]), switches_list = switches, walls_set = walls)                
             return b
 
-    def doSearches(self, board, algorithm, is_selected):
+    def doSearches(self, board, algorithm, is_selected, is_printed):
         if algorithm == 1:
-            bfs(board, is_selected)
+            bfs(board, is_selected, is_printed)
         if algorithm == 2:
-            dfs(board, is_selected)
+            dfs(board, is_selected, is_printed)
         if algorithm == 3:
-            ucs(board, is_selected)
+            ucs(board, is_selected, is_printed)
         if algorithm == 4:
-            astar(board, is_selected)
+            astar(board, is_selected, is_printed)
 
     def run(self):
         print("Which algorithm?")
@@ -64,7 +64,7 @@ class Game:
         
         file_name = f'levels/input-{level:02}.txt'  # Format level file
         print('\nSolving ' + file_name + '...\n')
-        for i in range(1, 5):
+        for i in range(4, 5):
             b = self.new_board(file_name)
-            self.doSearches(b, i, i == option)
+            self.doSearches(b, i, i == option, True)
     

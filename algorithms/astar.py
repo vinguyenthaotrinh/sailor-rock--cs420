@@ -152,7 +152,7 @@ def a_star(board, matrix, distance_grid):
         x, y = cur_player
         if terminal(cur_boxes, goal_positions):
             path, cost = reconstruct_path(came_from, current_ver, start_ver)
-            return path, cost, gen
+            return (path, cost, gen)
 
         for dx, dy in direct:
             x_next, y_next = x + dx, y + dy
@@ -161,7 +161,6 @@ def a_star(board, matrix, distance_grid):
             if 0 <= x_next < rows and 0 <= y_next < cols:
                 g_score_pre = g_score[current_ver]
                 g_score_cur = g_score_pre + 1
-                gen += 1
                 
                 if (x_next, y_next) in cur_boxes:       # if box
                     if (x_fur, y_fur) not in cur_boxes and matrix[x_fur][y_fur] != "#" and matrix[x_fur][y_fur] != "x": # if can go
@@ -178,6 +177,7 @@ def a_star(board, matrix, distance_grid):
                     h_score_cur = h_score[successor_ver[1]] + playerToBox((x_next, y_next), cur_boxes)
                     
                 if canGo:
+                    gen += 1
                     f_score_cur = g_score_cur + weighted * h_score_cur
                     if (successor_ver not in visited) or (f_score_cur < (visited[successor_ver])):
                         visited[successor_ver] = f_score_cur
@@ -185,6 +185,7 @@ def a_star(board, matrix, distance_grid):
                         heapq.heappush(open_set, (f_score_cur, successor_ver))
                         came_from[successor_ver] = (current_ver, g_score_cur - g_score_pre)
     tracemalloc.stop()
+    print("Solution not found")
     return None  # Không tìm thấy đường đi
 
 
@@ -255,7 +256,7 @@ def replay_solution(start_board, dir_list):
             file.write(replay_board.get_board_as_string() + "\n")
             
 
-def search(board, is_selected):
+def search(board, is_selected, is_printed):
     start = time()
     tracemalloc.start()
     nodes_generated = 0
@@ -263,16 +264,19 @@ def search(board, is_selected):
     matrix = board.get_matrix()
     # preprocessing
     matrix, distance_grid= preProcessing(board, matrix)
+
     # a star search
-    path, cost, gen = a_star(board, matrix, distance_grid)
+    result = a_star(board, matrix, distance_grid)
     # get dir
-    move = get_directions(path)
+    if (result != None):
+        path, cost, gen = result
+        move = get_directions(path)
     
-    end = time()
-    mem_usage = tracemalloc.get_traced_memory()[1]
-    tracemalloc.stop()
-    if is_selected:
-        replay_solution(board, move)
-            
-    print_results(cost, gen, end - start, mem_usage, move)
+        end = time()
+        mem_usage = tracemalloc.get_traced_memory()[1]
+        tracemalloc.stop()
+        if is_selected:
+            replay_solution(board, move)
+        if is_printed:
+            print_results(cost, gen, end - start, mem_usage, move)
     return
