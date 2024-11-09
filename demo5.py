@@ -190,8 +190,16 @@ def start_screen():
 def draw_map_items(mapObj, max_width, max_height):
     """Draws the map items"""
     print('Debug: ',mapObj)
+    
+    print("????")
+    print(len(mapObj[0]))
+    
+    print("????")
+    print(len(mapObj))
+    print("END")
     map_width = len(mapObj[0]) * TILE_SIZE
     map_height = len(mapObj) * TILE_SIZE
+    
     mapSurf = pygame.Surface((map_width, map_height))
     
     mapSurf.fill(PINK)
@@ -199,7 +207,6 @@ def draw_map_items(mapObj, max_width, max_height):
     #mapSurf.fill(PINK)
     mapSurfRect = mapSurf.get_rect(center=(HALF_WINWIDTH, HALF_WINHEIGHT))
     print(f"Map surface size: {mapSurf.get_width()} x {mapSurf.get_height()}")
-
 
     for y, row in enumerate(mapObj):
         for x, tile in enumerate(row):
@@ -230,14 +237,16 @@ def draw_map_items(mapObj, max_width, max_height):
             #    mapSurf.blit(tile_image, (x * TILE_SIZE, y * TILE_SIZE))
     draw_buttons()
 
-    
-
     screen.blit(mapSurf, mapSurfRect)
 
 def draw_game(mapObj, max_width, max_height):
+    print("IN")
     """Draws the entire game screen with map items and player."""
+    print(Player())
+    print("FGH")
     player = Player()
     screen.fill(PINK)
+    
     draw_map_items(mapObj, max_width, max_height)
     player.draw()  # Draw player on top of the map
     draw_level_bar() 
@@ -434,7 +443,8 @@ def runLevel(levels, level_index):
         player.update()  # Update player position for smooth animation
         #draw_game(levelObj, player, mapObj, max_width, max_height)
         #draw_game(mapObj, max_width, max_height)
-        draw_game(levelObj, max_width, max_height)  # Draw the updated game state
+        print("123456")
+        draw_game(levelObj["mapObj"], max_width, max_height)  # Draw the updated game state
 
         #draw_game(game_state, player, mapObj)  # Draw the updated game state
         return max_width, max_height
@@ -526,6 +536,8 @@ def main():
         screen.fill(PINK)
    
         draw_buttons()
+        print("??????????")
+        print(mapObj)
         draw_game(mapObj, max_width, max_height)
         draw_level_bar()
 
