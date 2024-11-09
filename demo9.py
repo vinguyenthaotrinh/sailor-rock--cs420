@@ -535,7 +535,6 @@ def handle_level_selection(event):
             button['selected'] = True
             current_level_index = i  # Cập nhật level hiện tại
             print(f"Selected Level: {current_level_index + 1}")
-            runLevel(levels, current_level_index)
             return current_level_index
 
 
@@ -589,18 +588,14 @@ def main():
     
                 # can not go any function here
                 for name, rect in buttons.items():
-                    print("2")
-                    x, y = event.pos
-                    print(f"Vị trí nhấn nút: ({x}, {y})")
-                    print(name)
-                    print(rect)
-                    if buttons[name].collidepoint(event.pos):
-                        print("??")
-                        button_states[name] = not button_states[name]
-                    elif rect.collidepoint(event.pos):
-                        print("change")
+                    if rect.collidepoint(event.pos):  # Kiểm tra va chạm bằng rect
+                        button_states[name] = not button_states[name]  # Đổi trạng thái nút
+
+                for button in level_buttons:
+                    rect = button['rect']  # Lấy đối tượng rect từ từ điển
+                    if rect.collidepoint(event.pos):
                         current_level_index = handle_level_selection(event)
-                        runLevel(levels, current_level_index)
+                        runLevel(levels, current_level_index, player)
 
         for i, button in enumerate(level_buttons):
             pygame.draw.rect(screen, PINK, button['rect'])
