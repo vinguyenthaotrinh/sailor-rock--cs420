@@ -100,8 +100,12 @@ TILEMAPPING = {
 # Thêm vào các thiết lập cho thanh level bar và các nút level
 level_bar_image = load_and_scale_image('ele_level/level_bar.png', 146.5, 30)  # Thanh bar cho level
 level_buttons = [
-    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 666.9, 20), 'selected': False, 'visible': False} for i in range(9)
-] 
+    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 666.9, 20), 
+     'selected': True if i == 0 else False,  # Nút đầu tiên sẽ được chọn
+     'visible': True if i == 0 else False}   # Nút đầu tiên sẽ được hiển thị
+    for i in range(9)
+]
+
 
 current_level_index = 0  # Chỉ số level hiện tại
 
@@ -147,21 +151,29 @@ class Player:
 
 def draw_level_bar():
     """Vẽ thanh level và các nút level trên đó."""
-    level_bar_x = level_bar_x = 630
+    level_bar_x = 630
     level_bar_y = SCREEN_HEIGHT - 590
 
     # Hiển thị thanh level bar
     screen.blit(level_bar_image, (level_bar_x, level_bar_y))
     
-    # Hiển thị các nút level
+    # Tìm vị trí của nút được chọn (nếu có)
+    selected_index = None
+    for i, button in enumerate(level_buttons):
+        if button['selected']:
+            selected_index = i
+            break
+
+    # Vẽ các nút
     for i, button in enumerate(level_buttons):
         if button['visible']:
-            image = load_and_scale_image('ele_level/level_bar.png', 10, 10) if button['selected'] else load_and_scale_image('ele_level/level.png', 10, 15)
-            screen.blit(image, button['rect'].topright)
+            return
 
+            # Kiểm tra nếu nút được nhấn
             if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
                 if button['rect'].collidepoint(pygame.mouse.get_pos()):
-                    # Update selected level
+                    print("CLICK")
+                    # Cập nhật trạng thái của các nút
                     for btn in level_buttons:
                         btn['selected'] = False
                         btn['visible'] = False  # Reset tất cả nút về trạng thái hiển thị
@@ -171,26 +183,22 @@ def draw_level_bar():
 
                     global current_level_index
                     current_level_index = i  # Set the current level index to the selected button
+        else:
+            image = load_and_scale_image('ele_level/level.png', 10, 15)
+            screen.blit(image, button['rect'].topright)
     if not level_bar_image:
         print("Level bar image not loaded.")
 
          
 
 def draw_buttons():
-    draw = True
+    """Draws all control buttons at the top of the screen."""
     for name, rect in buttons.items():
-        # Nếu nút chưa được chọn, vẽ hình ảnh của nó là 'selected'.
-        # Nếu nút đã được chọn, vẽ hình ảnh 'unselected'.
-        if button_states[name]:  # Nút chưa được chọn
-            image = button_images[name]['selected']
-            draw = False
-        elif draw:
-            image = button_images[name]['selected']
-        else:
-            image = button_images[name]['unselected']
-        
+        image = button_images[name]['selected'] if button_states[name] else button_images[name]['unselected']
         screen.blit(image, rect.topleft)
-
+    #for button in level_buttons:
+        #if button['visible']:  # Chỉ vẽ nút nếu 'visible' là True
+            #pygame.draw.rect(screen, (0, 255, 0), button['rect'])
 
 def start_screen():
     """Displays the start screen with a start button."""
