@@ -354,7 +354,7 @@ levels = load_all_levels()
 
 
 #def runLevel(levels, level_index, max_width, max_height):
-def runLevel(levels, level_index):
+def runLevel(levels, level_index, player):
     if level_index >= len(levels):
         return
     levelObj = levels[level_index]
@@ -385,8 +385,7 @@ def runLevel(levels, level_index):
     mapSurf = pygame.Surface((map_width, map_height))
     mapSurfRect = mapSurf.get_rect(center=(HALF_WINWIDTH, HALF_WINHEIGHT))
 
-    
-    player = Player()
+   
     # Convert tile coordinates to screen pixels
     #player.rect.center = ((player_start_x - 1) * TILE_SIZE, (player_start_y + 1) * TILE_SIZE)
     player.rect.center = (mapSurfRect.left + (player_start_x * TILE_SIZE)+25, mapSurfRect.top + (player_start_y * TILE_SIZE)+25)
@@ -403,18 +402,7 @@ def runLevel(levels, level_index):
     levelRect.bottomleft = (20, WINHEIGHT - 35)
     run_clicked = False  # Track if "Run" has been clicked
 
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        player.update()  # Update player position for smooth animation
-        #draw_game(levelObj, player, mapObj, max_width, max_height)
-        #draw_game(mapObj, max_width, max_height)
-        draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
-
-        #draw_game(game_state, player, mapObj)  # Draw the updated game state
+    #draw_game(game_state, player, mapObj)  # Draw the updated game state
     return max_width, max_height, level_index
 
 def run(levels, level_index):
@@ -548,6 +536,7 @@ def handle_level_selection(event):
             current_level_index = i  # Cập nhật level hiện tại
             print(f"Selected Level: {current_level_index + 1}")
             runLevel(levels, current_level_index)
+            return current_level_index
 
 
 def main():
@@ -556,20 +545,19 @@ def main():
     global levels
     levels = load_all_levels()
 
+    player = Player()
+
+
     #levels, max_width, max_height = readLevelsFile('levels/input-01.txt')  # Đọc file level và lấy kích thước bản đồ
     current_level_index = 0
-    runLevel(levels, current_level_index)
+    runLevel(levels, current_level_index, player)
 
     total_levels = 10  # Number of levels
-
     mapObj = load_map_from_file(current_level_index)
-    if not mapObj:
-        print(f"Error: Map for level {current_level_index + 1} could not be loaded.")
-        return
     max_width = max(len(row) for row in mapObj)
     max_height = len(mapObj)
 
-    player = Player()
+
 
     #runLevel(levels, current_level_index, max_width, max_height)  # Pass max_width and max_height here
 
@@ -578,12 +566,20 @@ def main():
 
     # Main game loop
     running = True
+    update_level_index = 0
+    update =  False
+
     #moves = []
     while running:
         screen.fill(PINK)
    
         draw_buttons()
+        if update:
+            runLevel(levels, current_level_index)
+            update = False
+
         draw_game(mapObj, max_width, max_height, player)
+        time.sleep(2)
         draw_level_bar()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -599,7 +595,9 @@ def main():
                     if buttons[name].collidepoint(event.pos):
                         button_states[name] = not button_states[name]
                     elif rect.collidepoint(event.pos):
-                        handle_level_selection(event)
+                        current_level_index = handle_level_selection(event)
+                        update = True
+
         for i, button in enumerate(level_buttons):
             pygame.draw.rect(screen, PINK, button['rect'])
             text = BASICFONT.render(f"Level {i + 1}", True, (255, 255, 255))
