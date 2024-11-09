@@ -399,9 +399,7 @@ def runLevel(level_index, player):
     levelRect = levelSurf.get_rect()
     levelRect.bottomleft = (20, WINHEIGHT - 35)
     draw_game(mapObj, max_width, max_height, player)
-    for m in mapObj:
-        print(m)
-    return max_width, max_height, level_index
+    return mapObj, max_width, max_height
 
 def run(levels, level_index):
     if level_index >= len(levels):
@@ -558,7 +556,9 @@ def main():
                     rect = button['rect']  # Lấy đối tượng rect từ từ điển
                     if rect.collidepoint(event.pos):
                         current_level_index = handle_level_selection(event)
-                        runLevel(current_level_index, player)
+                        mapObj, max_width, max_height = runLevel(current_level_index, player)
+                        print(max_width)
+                        print(max_height)
                         break
                 draw_level_bar()
     
