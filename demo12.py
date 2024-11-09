@@ -8,7 +8,7 @@ from manager.game import Game
 pygame.init()
 
 # Screen settings
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 1000, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Sailor Rock")
 
@@ -21,7 +21,7 @@ BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 # Constants
 TILE_SIZE = 50
 FPS = 30  # frames per second to update the screen
-WINWIDTH = 800  # width of the program's window, in pixels
+WINWIDTH = 1000  # width of the program's window, in pixels
 WINHEIGHT = 600  # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
@@ -101,7 +101,7 @@ TILEMAPPING = {
 # Thêm vào các thiết lập cho thanh level bar và các nút level
 level_bar_image = load_and_scale_image('ele_level/level_bar.png', 146.5, 30)  # Thanh bar cho level
 level_buttons = [
-    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 666.9, 20), 
+    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 836.9, 20), 
      'selected': True if i == 0 else False,  # Nút đầu tiên sẽ được chọn
      'visible': True if i == 0 else False}   # Nút đầu tiên sẽ được hiển thị
     for i in range(9)
@@ -151,7 +151,7 @@ class Player:
 
 def draw_level_bar():
     """Vẽ thanh level và các nút level trên đó."""
-    level_bar_x = 630
+    level_bar_x = 800
     level_bar_y = SCREEN_HEIGHT - 590
 
     # Hiển thị thanh level bar
@@ -565,25 +565,25 @@ def main():
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
-                    new_game.doSearches(b, 4, True)
+                    new_game.doSearches(b, 4, True, False)
                     canRun = True
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
                     #IMPLEMENT BFS
-                    new_game.doSearches(b, 1, True)
+                    new_game.doSearches(b, 1, True, False)
                     canRun = True
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     button_states['DFS'] = not button_states['DFS']
                     #IMPLEMENT DFS
-                    new_game.doSearches(b, 2, True)
+                    new_game.doSearches(b, 2, True, False)
                     canRun = True
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
                     #IMPLEMENT UCS
-                    new_game.doSearches(b, 3, True)
+                    new_game.doSearches(b, 3, True, False)
                     canRun = True
 
                 elif buttons['Reset'].collidepoint(event.pos):

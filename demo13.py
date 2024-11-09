@@ -8,12 +8,13 @@ from manager.game import Game
 pygame.init()
 
 # Screen settings
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 1000, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Sailor Rock")
 
 # Colors and fonts
 PINK = (238, 196, 255)
+WHITE = (255, 255, 255)
 WHITE = (255, 255, 255)
 TEXTCOLOR = WHITE
 BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
@@ -21,7 +22,7 @@ BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 # Constants
 TILE_SIZE = 50
 FPS = 30  # frames per second to update the screen
-WINWIDTH = 800  # width of the program's window, in pixels
+WINWIDTH = 1000  # width of the program's window, in pixels
 WINHEIGHT = 600  # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
@@ -76,7 +77,6 @@ button_states = {name: False for name in buttons}  # False for unselected, True 
 
 sprites = {
     UP: [pygame.image.load(f'up_{i}.png') for i in range(1, 6)],
-    #DOWN: [pygame.image.load('Rock.png')],
     DOWN: [pygame.image.load(f'down_{i}.png') for i in range(1, 6)],
     LEFT: [pygame.image.load(f'left_{i}.png') for i in range(1, 6)],
     RIGHT: [pygame.image.load(f'right_{i}.png') for i in range(1, 6)],
@@ -94,14 +94,12 @@ TILEMAPPING = {
     '#': IMAGESDICT['wall'],
     ' ': IMAGESDICT['inside floor'],
     '$': IMAGESDICT['rock']#,
-    #'*': ('switch places', 'rock'),   
-    #'+': ('switch places')
 }
 
 # Thêm vào các thiết lập cho thanh level bar và các nút level
 level_bar_image = load_and_scale_image('ele_level/level_bar.png', 146.5, 30)  # Thanh bar cho level
 level_buttons = [
-    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 666.9, 20), 
+    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 836.9, 20), 
      'selected': True if i == 0 else False,  # Nút đầu tiên sẽ được chọn
      'visible': True if i == 0 else False}   # Nút đầu tiên sẽ được hiển thị
     for i in range(9)
@@ -116,7 +114,7 @@ class Player:
         self.rect = self.image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         self.direction = DOWN
         self.frame_index = 0
-        self.animation_speed = 10  # Speed of animation
+        self.animation_speed = 13  # Speed of animation
         self.target_pos = self.rect.center  # Position to move towards
         self.is_moving = False
 
@@ -148,10 +146,38 @@ class Player:
     def draw(self):
         screen.blit(self.image, self.rect)
 
+# Load loading images
+loading_images = [pygame.image.load(f'loading/{i}.png') for i in range(1,9)]
+
+def show_loading_screen():
+    """Displays a looping loading screen animation until the file 'manager/gui.txt' is found."""
+    loading_index = 0  # To cycle through loading images
+
+    while not os.path.exists("manager/gui.txt"):
+        # Handle events to allow quitting during the loading screen
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # Display the loading image
+        screen.fill((0, 0, 0))  # Fill screen with black
+        screen.blit(loading_images[loading_index], (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 100))
+        pygame.display.flip()
+
+        # Cycle to the next image
+        loading_index = (loading_index + 1) % len(loading_images)
+        
+        # Control the animation speed
+        time.sleep(0.5)  # Adjust to change the animation speed
+
+        # Cap the frame rate
+        FPSCLOCK.tick(FPS)
+
 
 def draw_level_bar():
     """Vẽ thanh level và các nút level trên đó."""
-    level_bar_x = 630
+    level_bar_x = 800
     level_bar_y = SCREEN_HEIGHT - 590
 
     # Hiển thị thanh level bar
@@ -180,9 +206,6 @@ def draw_buttons():
     for name, rect in buttons.items():
         image = button_images[name]['selected'] if button_states[name] else button_images[name]['unselected']
         screen.blit(image, rect.topleft)
-    #for button in level_buttons:
-        #if button['visible']:  # Chỉ vẽ nút nếu 'visible' là True
-            #pygame.draw.rect(screen, (0, 255, 0), button['rect'])
 
 def start_screen():
     """Displays the start screen with a start button."""
@@ -191,12 +214,7 @@ def start_screen():
     screen.blit(start_scr, (0, 0))
 
     start_button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 150, 100, 50)
-
-    #screen.blit(start_button_image, (start_button_rect.x + 15, start_button_rect.y + 90))
     screen.blit(start_button_image, start_button_rect.topleft)
-
-
-    #pygame.display.flip()
 
     # Event loop for the start screen
     while True:
@@ -218,10 +236,7 @@ def draw_map_items(mapObj, max_width, max_height):
     mapSurf = pygame.Surface((map_width, map_height))
     
     mapSurf.fill(PINK)
-    #mapSurf = pygame.Surface((max_width * TILE_SIZE, max_height * TILE_SIZE))
-    #mapSurf.fill(PINK)
     mapSurfRect = mapSurf.get_rect(center=(HALF_WINWIDTH, HALF_WINHEIGHT))
-    #print(f"Map surface size: {mapSurf.get_width()} x {mapSurf.get_height()}")
 
     for y, row in enumerate(mapObj):
         for x, tile in enumerate(row):
@@ -243,9 +258,6 @@ def draw_map_items(mapObj, max_width, max_height):
             elif tile == '+':  # Player on a switch
                 switch_tile = TILEMAPPING['.']
                 mapSurf.blit(switch_tile, (x * TILE_SIZE, y * TILE_SIZE))
-            #if tile in TILEMAPPING:
-            #    tile_image = TILEMAPPING[tile]
-            #    mapSurf.blit(tile_image, (x * TILE_SIZE, y * TILE_SIZE))
     draw_buttons()
 
     screen.blit(mapSurf, mapSurfRect)
@@ -270,39 +282,6 @@ def load_path_from_file(filename="manager/gui.txt"):
         else:
             path = ""
     return path
-
-def show_loading_screen():
-    """Displays a loading screen with a rotating animation or message."""
-    loading_text = BASICFONT.render("Loading...", True, TEXTCOLOR)
-    loading_rect = loading_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-    
-    angle = 0
-    while not os.path.exists("manager/gui.txt"):
-        # Clear the screen
-        screen.fill(PINK)
-        
-        # Rotate the text to simulate a loading animation
-        rotated_text = pygame.transform.rotate(loading_text, angle)
-        rotated_rect = rotated_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        
-        # Display rotated loading message
-        screen.blit(rotated_text, rotated_rect.topleft)
-        pygame.display.flip()
-        
-        # Rotate slightly for each frame
-        angle += 5
-        if angle >= 360:
-            angle = 0
-
-        # Control the loading animation speed
-        FPSCLOCK.tick(15)
-        
-        # Check for quit events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
 
 def load_map_steps(filename="manager/gui.txt", max_width=None, max_height=None):
     with open(filename, "r") as file:
@@ -389,7 +368,6 @@ def runLevel(level_index, player):
         print("Error: No starting position ('@') found in the map for the player.")
         return  # or handle the error as needed, such as loading a default position or ending the level
 
-    #mapObj[player_start_x][player_start_y] = ' '  # Clear the starting position on the map
     max_width = max(len(row) for row in mapObj)
     max_height = len(mapObj)
     map_width = len(mapObj[0]) * TILE_SIZE
@@ -401,6 +379,9 @@ def runLevel(level_index, player):
    
     # Convert tile coordinates to screen pixels
     player.rect.center = (mapSurfRect.left + (player_start_x * TILE_SIZE)+25, mapSurfRect.top + (player_start_y * TILE_SIZE)+25)
+    player.image = sprites[DOWN][0]
+    player.frame_index = 0  # Reset animation frame index if needed
+
     print(f"Player start position in tiles: {player_start_x}, {player_start_y}")
     print(f"Player start position in pixels: {player.rect.topleft}")
 
@@ -418,10 +399,6 @@ def run(levels, level_index):
     if level_index >= len(levels):
         return
     levelObj = levels[level_index]
-    #mapObj = load_map_from_file(level_index)
-    #max_width = max(len(row) for row in mapObj)
-    #max_height = len(mapObj)
-
     path = load_path_from_file()
     map_steps = load_map_steps()  # Load các bước map
     current_step = 0
@@ -436,7 +413,6 @@ def run(levels, level_index):
         print("Error: No starting position ('@') found in the map for the player.")
         return  # or handle the error as needed, such as loading a default position or ending the level
 
-    #mapObj[player_start_x][player_start_y] = ' '  # Clear the starting position on the map
     max_width = max(len(row) for row in mapObj)
     max_height = len(mapObj)
     map_width = len(mapObj[0]) * TILE_SIZE
@@ -448,12 +424,11 @@ def run(levels, level_index):
     
     player = Player()
     # Convert tile coordinates to screen pixels
-    #player.rect.center = ((player_start_x - 1) * TILE_SIZE, (player_start_y + 1) * TILE_SIZE)
     player.rect.center = (mapSurfRect.left + (player_start_x * TILE_SIZE)+25, mapSurfRect.top + (player_start_y * TILE_SIZE)+25)
+
     print(f"Player start position in tiles: {player_start_x}, {player_start_y}")
     print(f"Player start position in pixels: {player.rect.topleft}")
 
-    #game_state = {'player': (levelObj['startState']['player'][0], levelObj['startState']['player'][1])}
 
     clock = pygame.time.Clock()
     last_move_time = pygame.time.get_ticks()  # Track time for step intervals
@@ -476,7 +451,7 @@ def run(levels, level_index):
         # Automatically move the player along the path with a 1-second interval between steps
         if current_step < len(path) and not player.is_moving:
             current_time = pygame.time.get_ticks()
-            if (current_time - last_move_time) > 500:  
+            if (current_time - last_move_time) > 400:  
                 direction = path[current_step]
                 if direction == 'u':
                     player.move(UP)
@@ -493,10 +468,8 @@ def run(levels, level_index):
                 current_step += 1     
         player.update()  # Update player position for smooth animation
  
-        #draw_game(mapObj, max_width, max_height)
         draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
 
-        #draw_game(game_state, player, mapObj)  # Draw the updated game state
     return mapObj, player
 
 def handle_level_selection(event):
@@ -520,7 +493,6 @@ def main():
     b = new_game.new_board("levels/input-01.txt")
 
     start_screen()  # Display the start screen
-    show_loading_screen()
     global levels
     levels = load_all_levels()
 
@@ -555,6 +527,7 @@ def main():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons['Run'].collidepoint(event.pos):
+                    show_loading_screen()  # Show loading screen
                     if (canRun):
                         run_clicked = True  # Start automatic movement after "Run" is clicked
                         button_states['Run'] = not button_states['Run']
@@ -562,11 +535,13 @@ def main():
                     else:
                         continue
 
+
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
                     new_game.doSearches(b, 4, True, False)
                     canRun = True
+           
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
@@ -579,6 +554,7 @@ def main():
                     #IMPLEMENT DFS
                     new_game.doSearches(b, 2, True, False)
                     canRun = True
+                    button_states['DFS'] = ['']
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
@@ -600,7 +576,7 @@ def main():
                 # can not go any function here
                     for name, rect in buttons.items():
                         if rect.collidepoint(event.pos):  # Kiểm tra va chạm bằng rect
-                            button_states[name] = not button_states[name]  # Đổi trạng thái nút
+                            button_states[name] = ['unselect']  # Đổi trạng thái nút
 
                     for button in level_buttons:
                         rect = button['rect']  # Lấy đối tượng rect từ từ điển
