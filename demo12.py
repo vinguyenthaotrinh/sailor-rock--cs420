@@ -539,7 +539,7 @@ def main():
     # Main game loop
     running = True
     update_level_index = 0
-    update =  False
+    canRun =  False
 
     #moves = []
     while running:
@@ -555,33 +555,46 @@ def main():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons['Run'].collidepoint(event.pos):
-                    run_clicked = True  # Start automatic movement after "Run" is clicked
-                    button_states['Run'] = not button_states['Run']
-                    mapObj, player = run(levels, current_level_index)
+                    if (canRun):
+                        run_clicked = True  # Start automatic movement after "Run" is clicked
+                        button_states['Run'] = not button_states['Run']
+                        mapObj, player = run(levels, current_level_index)
+                    else:
+                        continue
 
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
                     new_game.doSearches(b, 4, True)
+                    canRun = True
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
                     #IMPLEMENT BFS
                     new_game.doSearches(b, 1, True)
+                    canRun = True
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     button_states['DFS'] = not button_states['DFS']
                     #IMPLEMENT DFS
                     new_game.doSearches(b, 2, True)
+                    canRun = True
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
                     #IMPLEMENT UCS
                     new_game.doSearches(b, 3, True)
+                    canRun = True
 
                 elif buttons['Reset'].collidepoint(event.pos):
                     button_states['Reset'] = not button_states['Reset']
-                    run(levels, 0)
+                    mapObj, max_width, max_height = runLevel(0, player)
+
+                    current_level_index = 0
+                    level = current_level_index + 1
+                    file_name = f'levels/input-{level:02}.txt'
+                    b = new_game.new_board(file_name)
+                    canRun = False
     
                 else:
                 # can not go any function here
@@ -591,17 +604,14 @@ def main():
 
                     for button in level_buttons:
                         rect = button['rect']  # Lấy đối tượng rect từ từ điển
-                        print(button)
                         if rect.collidepoint(event.pos):
-                            print("????")
                             current_level_index = handle_level_selection(event)
                             mapObj, max_width, max_height = runLevel(current_level_index, player)
                             # load new map:
                             level = current_level_index + 1
                             file_name = f'levels/input-{level:02}.txt'
                             b = new_game.new_board(file_name)
-                            b.print_board()
-                            print(file_name)
+                            canRun = False
                             break
                     draw_level_bar()
     
