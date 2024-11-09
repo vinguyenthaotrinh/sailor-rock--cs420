@@ -559,12 +559,10 @@ def main():
                     button_states['Run'] = not button_states['Run']
                     mapObj = run(levels, current_level_index)
 
-                if buttons['A*'].collidepoint(event.pos):
+                elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
                     new_game.doSearches(b, 4, True)
-                    time.sleep(2)
-                    print("XONG A*")
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
@@ -581,30 +579,31 @@ def main():
                     #IMPLEMENT UCS
                     new_game.doSearches(b, 3, True)
 
-                if buttons['Reset'].collidepoint(event.pos):
+                elif buttons['Reset'].collidepoint(event.pos):
                     button_states['Reset'] = not button_states['Reset']
                     run(levels, 0)
     
-    
+                else:
                 # can not go any function here
-                for name, rect in buttons.items():
-                    if rect.collidepoint(event.pos):  # Kiểm tra va chạm bằng rect
-                        button_states[name] = not button_states[name]  # Đổi trạng thái nút
+                    for name, rect in buttons.items():
+                        if rect.collidepoint(event.pos):  # Kiểm tra va chạm bằng rect
+                            button_states[name] = not button_states[name]  # Đổi trạng thái nút
 
-                for button in level_buttons:
-                    rect = button['rect']  # Lấy đối tượng rect từ từ điển
-                    if rect.collidepoint(event.pos):
-                        print("????")
-                        current_level_index = handle_level_selection(event)
-                        mapObj, max_width, max_height = runLevel(current_level_index, player)
-                        # load new map:
-                        level = current_level_index + 1
-                        file_name = f'levels/input-{level:02}.txt'
-                        b = new_game.new_board(file_name)
-                        b.print_board()
-                        print(file_name)
-                        break
-                draw_level_bar()
+                    for button in level_buttons:
+                        rect = button['rect']  # Lấy đối tượng rect từ từ điển
+                        print(button)
+                        if rect.collidepoint(event.pos):
+                            print("????")
+                            current_level_index = handle_level_selection(event)
+                            mapObj, max_width, max_height = runLevel(current_level_index, player)
+                            # load new map:
+                            level = current_level_index + 1
+                            file_name = f'levels/input-{level:02}.txt'
+                            b = new_game.new_board(file_name)
+                            b.print_board()
+                            print(file_name)
+                            break
+                    draw_level_bar()
     
         draw_buttons()
         #pygame.display.update()
