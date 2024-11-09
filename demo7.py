@@ -113,7 +113,7 @@ class Player:
         self.direction = DOWN
         self.frame_index = 0
         self.animation_speed = 10  # Speed of animation
-        self.target_pos = self.rect.topleft  # Position to move towards
+        self.target_pos = self.rect.center  # Position to move towards
         self.is_moving = False
 
     def move(self, direction):
@@ -244,7 +244,7 @@ def draw_game(mapObj, max_width, max_height, player):
 
     pygame.display.flip()
 
-def load_path_from_file(filename="outputgui.txt"):
+def load_path_from_file(filename="manager/gui.txt"):
     with open(filename, "r") as file:
         line = file.readline().strip()
         if line.startswith("Path: "):
@@ -259,7 +259,7 @@ def show_loading_screen():
     loading_rect = loading_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
     
     angle = 0
-    while not os.path.exists("outputgui.txt"):
+    while not os.path.exists("manager/gui.txt"):
         # Clear the screen
         screen.fill(PINK)
         
@@ -359,6 +359,7 @@ def runLevel(levels, level_index):
         return
     #max_width = max(len(row) for row in mapObj)
     #max_height = len(mapObj)
+
     player_start_x, player_start_y = levelObj['startState']['player']
     try:
         player_start_x, player_start_y = next(
@@ -371,11 +372,17 @@ def runLevel(levels, level_index):
     #mapObj[player_start_x][player_start_y] = ' '  # Clear the starting position on the map
     max_width = max(len(row) for row in mapObj)
     max_height = len(mapObj)
+    map_width = len(mapObj[0]) * TILE_SIZE
+    map_height = len(mapObj) * TILE_SIZE
+    
+    mapSurf = pygame.Surface((map_width, map_height))
+    mapSurfRect = mapSurf.get_rect(center=(HALF_WINWIDTH, HALF_WINHEIGHT))
+
     
     player = Player()
     # Convert tile coordinates to screen pixels
     #player.rect.center = ((player_start_x - 1) * TILE_SIZE, (player_start_y + 1) * TILE_SIZE)
-    player.rect.center = (player_start_x * TILE_SIZE), player_start_y * TILE_SIZE)
+    player.rect.center = (mapSurfRect.left + (player_start_x * TILE_SIZE)+25, mapSurfRect.top + (player_start_y * TILE_SIZE)+25)
     print(f"Player start position in tiles: {player_start_x}, {player_start_y}")
     print(f"Player start position in pixels: {player.rect.topleft}")
 
