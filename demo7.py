@@ -157,19 +157,8 @@ def draw_level_bar():
     for i, button in enumerate(level_buttons):
         image = load_and_scale_image('ele_level/level_bar.png', 10, 10) if button['selected'] else load_and_scale_image('ele_level/level.png', 10, 15)
         screen.blit(image, button['rect'].topright)
-
-        if pygame.mouse.get_pressed()[0]:  # Left mouse button is clicked
-            if button['rect'].collidepoint(pygame.mouse.get_pos()):
-                # Update selected level
-                for btn in level_buttons:
-                    btn['selected'] = False
-                button['selected'] = True
-                global current_level_index
-                current_level_index = i  # Set the current level index to the selected button
     if not level_bar_image:
         print("Level bar image not loaded.")
-
-         
 
 def draw_buttons():
     """Draws all control buttons at the top of the screen."""
@@ -229,6 +218,7 @@ def draw_map_items(mapObj, max_width, max_height):
             elif tile == '$':  # Rock
                 rock_tile = TILEMAPPING['$']
                 mapSurf.blit(rock_tile, (x * TILE_SIZE, y * TILE_SIZE))
+                #print("ROCK IN ", x, " ", y)
             elif tile == '*':  # Rock on a switch
                 switch_tile, rock_tile = TILEMAPPING['.'], TILEMAPPING['$']
                 mapSurf.blit(switch_tile, (x * TILE_SIZE, y * TILE_SIZE))
@@ -306,7 +296,7 @@ def load_map_steps(filename="manager/gui.txt", max_width=None, max_height=None):
     reading_map = False
 
     for line in lines:
-        line = line.rstrip('\n')
+        line = line.rstrip()
         if line.startswith("Step"):
             if current_map:
                 steps.append(current_map)
@@ -347,6 +337,11 @@ def load_all_levels():
     for i in range(10):  # Duyệt qua 10 file từ input-01.txt đến input-10.txt
         levelObj = load_map_from_file(i)
         levels.append({'mapObj': levelObj, 'startState': {'player': (1, 1)}})  # Adjust start position as needed
+
+        #filename = f"levels/input-{i:02}.txt"
+        #mapObj = load_map_from_file(i - 1)
+        #if mapObj:  # Nếu mapObj không rỗng
+        #    levels.append({'mapObj': mapObj})
     return levels
 
 # Khởi tạo các level khi bắt đầu game
@@ -358,14 +353,13 @@ def runLevel(levels, level_index):
     if level_index >= len(levels):
         return
     levelObj = levels[level_index]
+    mapObj = levelObj['mapObj']  # Sử dụng bản đồ hiện tại cho level
     #mapObj = load_map_from_file(level_index)
+    if not mapObj:
+        print(f"Error: Map for level {level_index + 1} could not be loaded.")
+        return
     #max_width = max(len(row) for row in mapObj)
     #max_height = len(mapObj)
-
-    path = load_path_from_file()
-    map_steps = load_map_steps()  # Load các bước map
-    current_step = 0
-    mapObj = levelObj['mapObj']
 
     player_start_x, player_start_y = levelObj['startState']['player']
     try:
@@ -393,7 +387,13 @@ def runLevel(levels, level_index):
     print(f"Player start position in tiles: {player_start_x}, {player_start_y}")
     print(f"Player start position in pixels: {player.rect.topleft}")
 
+
+    path = load_path_from_file()
+    map_steps = load_map_steps()  # Load các bước map
+    current_step = 0
+
     #game_state = {'player': (levelObj['startState']['player'][0], levelObj['startState']['player'][1])}
+    #mapObj = levelObj['mapObj']
 
     clock = pygame.time.Clock()
     last_move_time = pygame.time.get_ticks()  # Track time for step intervals
@@ -413,8 +413,6 @@ def runLevel(levels, level_index):
                 if buttons['Run'].collidepoint(event.pos):
                     run_clicked = True  # Start automatic movement after "Run" is clicked
                     button_states['Run'] = not button_states['Run']
-        if (current_step >= len(path)):
-            return
 
         # Automatically move the player along the path with a 1-second interval between steps
         if run_clicked and current_step < len(path) and not player.is_moving:
@@ -430,8 +428,9 @@ def runLevel(levels, level_index):
                 elif direction == 'r':
                     player.move(RIGHT)
 
-                mapObj = map_steps[current_step]
-                print (map_steps[current_step])
+                mapObj = map_steps[current_step]  # Lấy map của bước hiện tại
+                #for m in mapObj:
+                #    print (m)
                 last_move_time = current_time  # Cập nhật thời gian di chuyển
                 current_step += 1     
         player.update()  # Update player position for smooth animation
@@ -439,8 +438,11 @@ def runLevel(levels, level_index):
         #draw_game(mapObj, max_width, max_height)
         draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
 
+        if (current_step >= len(path)):
+            return
+
         #draw_game(game_state, player, mapObj)  # Draw the updated game state
-    return max_width, max_height, level_index
+    return max_width, max_height
 
 def readLevelsFile(filename):
     assert os.path.exists(filename), f'Cannot find the level file: {filename}'
@@ -479,6 +481,7 @@ def readLevelsFile(filename):
 def handle_level_selection(event):
     """Xử lý khi nhấn chọn level."""
     global current_level_index, levels, max_width, max_height
+    print("PRESS");
     for i, button in enumerate(level_buttons):
         if button['rect'].collidepoint(event.pos):
             # Đặt trạng thái selected cho nút được nhấn
@@ -487,6 +490,13 @@ def handle_level_selection(event):
             button['selected'] = True
             current_level_index = i  # Cập nhật level hiện tại
             print(f"Selected Level: {current_level_index + 1}")
+
+            # Load map cho level mới
+            #mapObj = load_map_from_file(current_level_index + 1)
+            #levels, max_width, max_height = readLevelsFile('levels/input-01.txt')  # Đọc file level và lấy kích thước bản đồ
+
+            #levels[current_level_index]['mapObj'] = mapObj
+            #runLevel(levels, current_level_index, max_width, max_height)  # Chạy level đã chọn
             runLevel(levels, current_level_index)
 
 
@@ -508,7 +518,8 @@ def main():
     max_height = len(mapObj)
 
     player = Player()
-
+    runLevel(levels, current_level_index)  # Run the first level
+    print("RETURN")
     #runLevel(levels, current_level_index, max_width, max_height)  # Pass max_width and max_height here
 
     # Initialize the game state
@@ -517,31 +528,34 @@ def main():
     # Main game loop
     running = True
     #moves = []
+    #print("???????")
     while running:
+        #time.sleep(5)
+        #print("RUN")
         screen.fill(PINK)
    
         draw_buttons()
         #draw_game(mapObj, max_width, max_height, player )
         draw_level_bar()
+        #print("PRINT1")
         for event in pygame.event.get():
+            print("mmmm")
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-
+                print("2")
                 for name, rect in buttons.items():
-                    if name.collidepoint(event.pos):
+                    print("1")
+                    if rect.collidepoint(event.pos):
+                        print("@#@#")
+                        # Toggle button state on click
                         button_states[name] = not button_states[name]
-                    elif rect.collidepoint(event.pos):
                         handle_level_selection(event)
-        for i, button in enumerate(level_buttons):
-            pygame.draw.rect(screen, button['rect'])
-            text = BASICFONT.render(f"Level {i + 1}", True, (255, 255, 255))
-            screen.blit(text, (button['rect'].x + 5, button['rect'].y + 5))
-    
-        while current_level_index < total_levels:
-             runLevel(levels, current_level_index)
-             current_level_index +=1
+     
+                
+        #while current_level_index < total_levels:
+        #     runLevel(levels, current_level_index)
 
         
         # After the level completes, move to the next level
