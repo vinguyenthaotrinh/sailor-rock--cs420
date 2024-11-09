@@ -2,6 +2,7 @@
 import sys
 import time
 import os
+from manager.game import Game
 
 # Initialize Pygame
 pygame.init()
@@ -470,7 +471,7 @@ def run(levels, level_index):
                 sys.exit()
       
         if (current_step >= len(path)):
-            return
+            return mapObj
 
         # Automatically move the player along the path with a 1-second interval between steps
         if current_step < len(path) and not player.is_moving:
@@ -496,7 +497,7 @@ def run(levels, level_index):
         draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
 
         #draw_game(game_state, player, mapObj)  # Draw the updated game state
-    return max_width, max_height, level_index
+    return mapObj
 
 def handle_level_selection(event):
     """Xử lý khi nhấn chọn level."""
@@ -515,6 +516,9 @@ def handle_level_selection(event):
 
 
 def main():
+    new_game = Game()
+    b = new_game.new_board("levels/input-01.txt")
+
     start_screen()  # Display the start screen
     show_loading_screen()
     global levels
@@ -531,9 +535,6 @@ def main():
     mapObj = load_map_from_file(current_level_index)
     max_width = max(len(row) for row in mapObj)
     max_height = len(mapObj)
-
-
-
 
     # Main game loop
     running = True
@@ -556,23 +557,29 @@ def main():
                 if buttons['Run'].collidepoint(event.pos):
                     run_clicked = True  # Start automatic movement after "Run" is clicked
                     button_states['Run'] = not button_states['Run']
-                    run(levels, current_level_index)
+                    mapObj = run(levels, current_level_index)
 
                 if buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
+                    new_game.doSearches(b, 4, True)
+                    time.sleep(2)
+                    print("XONG A*")
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
                     #IMPLEMENT BFS
+                    new_game.doSearches(b, 1, True)
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     button_states['DFS'] = not button_states['DFS']
                     #IMPLEMENT DFS
+                    new_game.doSearches(b, 2, True)
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
                     #IMPLEMENT UCS
+                    new_game.doSearches(b, 3, True)
 
                 if buttons['Reset'].collidepoint(event.pos):
                     button_states['Reset'] = not button_states['Reset']
@@ -587,10 +594,15 @@ def main():
                 for button in level_buttons:
                     rect = button['rect']  # Lấy đối tượng rect từ từ điển
                     if rect.collidepoint(event.pos):
+                        print("????")
                         current_level_index = handle_level_selection(event)
                         mapObj, max_width, max_height = runLevel(current_level_index, player)
-                        print(max_width)
-                        print(max_height)
+                        # load new map:
+                        level = current_level_index + 1
+                        file_name = f'levels/input-{level:02}.txt'
+                        b = new_game.new_board(file_name)
+                        b.print_board()
+                        print(file_name)
                         break
                 draw_level_bar()
     
