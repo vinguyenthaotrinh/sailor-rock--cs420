@@ -590,6 +590,10 @@ def main():
                 # can not go any function here
                 for name, rect in buttons.items():
                     print("2")
+                    x, y = event.pos
+                    print(f"Vị trí nhấn nút: ({x}, {y})")
+                    print(name)
+                    print(rect)
                     if buttons[name].collidepoint(event.pos):
                         print("??")
                         button_states[name] = not button_states[name]
