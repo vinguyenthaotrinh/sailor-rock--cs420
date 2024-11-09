@@ -189,8 +189,14 @@ def start_screen():
 
 def draw_map_items(mapObj, max_width, max_height):
     """Draws the map items"""
-    mapSurf = pygame.Surface((max_width * TILE_SIZE, max_height * TILE_SIZE))
+    print('Debug: ',mapObj)
+    map_width = len(mapObj[0]) * TILE_SIZE
+    map_height = len(mapObj) * TILE_SIZE
+    mapSurf = pygame.Surface((map_width, map_height))
+    
     mapSurf.fill(PINK)
+    #mapSurf = pygame.Surface((max_width * TILE_SIZE, max_height * TILE_SIZE))
+    #mapSurf.fill(PINK)
     mapSurfRect = mapSurf.get_rect(center=(HALF_WINWIDTH, HALF_WINHEIGHT))
     print(f"Map surface size: {mapSurf.get_width()} x {mapSurf.get_height()}")
 
@@ -208,6 +214,8 @@ def draw_map_items(mapObj, max_width, max_height):
             elif tile == '$':  # Rock
                 rock_tile = TILEMAPPING['$']
                 mapSurf.blit(rock_tile, (x * TILE_SIZE, y * TILE_SIZE))
+                print ('toa do cua rock', x, y)
+
             elif tile == '*':  # Rock on a switch
                 switch_tile, rock_tile = TILEMAPPING['.'], TILEMAPPING['$']
                 mapSurf.blit(switch_tile, (x * TILE_SIZE, y * TILE_SIZE))
@@ -226,8 +234,9 @@ def draw_map_items(mapObj, max_width, max_height):
 
     screen.blit(mapSurf, mapSurfRect)
 
-def draw_game(player, mapObj, max_width, max_height):
+def draw_game(mapObj, max_width, max_height):
     """Draws the entire game screen with map items and player."""
+    player = Player()
     screen.fill(PINK)
     draw_map_items(mapObj, max_width, max_height)
     player.draw()  # Draw player on top of the map
@@ -279,7 +288,7 @@ def show_loading_screen():
                 sys.exit()
 
 
-def load_map_steps(filename="outputgui.txt", max_width=None, max_height=None):
+def load_map_steps(filename="manager/gui.txt", max_width=None, max_height=None):
     with open(filename, "r") as file:
         lines = file.readlines()
 
@@ -326,11 +335,14 @@ def load_map_from_file(level_index):
 
 def load_all_levels():
     levels = []
-    for i in range(1, 11):  # Duyệt qua 10 file từ input-01.txt đến input-10.txt
-        filename = f"levels/input-{i:02}.txt"
-        mapObj = load_map_from_file(i - 1)
-        if mapObj:  # Nếu mapObj không rỗng
-            levels.append({'mapObj': mapObj})
+    for i in range(10):  # Duyệt qua 10 file từ input-01.txt đến input-10.txt
+        levelObj = load_map_from_file(i)
+        levels.append({'mapObj': levelObj, 'startState': {'player': (1, 1)}})  # Adjust start position as needed
+
+        #filename = f"levels/input-{i:02}.txt"
+        #mapObj = load_map_from_file(i - 1)
+        #if mapObj:  # Nếu mapObj không rỗng
+        #    levels.append({'mapObj': mapObj})
     return levels
 
 # Khởi tạo các level khi bắt đầu game
@@ -338,30 +350,32 @@ levels = load_all_levels()
 
 
 #def runLevel(levels, level_index, max_width, max_height):
-def runLevel(level_index):
-
-    #if level_index >= len(levels):
-        #return
-    #levelObj = levels[level_index]
-    #mapObj = levelObj['mapObj']  # Sử dụng bản đồ hiện tại cho level
-    mapObj = load_map_from_file(level_index)
+def runLevel(levels, level_index):
+    if level_index >= len(levels):
+        return
+    levelObj = levels[level_index]
+    mapObj = levelObj['mapObj']  # Sử dụng bản đồ hiện tại cho level
+    #mapObj = load_map_from_file(level_index)
     if not mapObj:
         print(f"Error: Map for level {level_index + 1} could not be loaded.")
         return
-    max_width = max(len(row) for row in mapObj)
-    max_height = len(mapObj)
+    #max_width = max(len(row) for row in mapObj)
+    #max_height = len(mapObj)
+    print("levelObj:", levelObj)  # Check what `levelObj` contains
+    print("levelObj['startState']:", levelObj.get('startState'))  # Ensure 'startState' key exists
 
-    #player_start_x, player_start_y = levelObj['startState']['player']
+    player_start_x, player_start_y = levelObj['startState']['player']
     try:
-        player_start_x, player_start_y = next(
-            (x, y) for y, row in enumerate(mapObj) for x, tile in enumerate(row) if tile in ('@', '+')
+        player_start_y, player_start_x = next(
+            (x, y) for y, row in enumerate(mapObj) for x, tile in enumerate(row) if (tile in ['@', '+'])
         )
     except StopIteration:
         print("Error: No starting position ('@') found in the map for the player.")
         return  # or handle the error as needed, such as loading a default position or ending the level
 
-    mapObj[player_start_y][player_start_x] = ' '  # Clear the starting position on the map
-
+    #mapObj[player_start_x][player_start_y] = ' '  # Clear the starting position on the map
+    max_width = max(len(row) for row in mapObj)
+    max_height = len(mapObj)
     
     player = Player()
     # Convert tile coordinates to screen pixels
@@ -379,7 +393,7 @@ def runLevel(level_index):
     #game_state = {'player': (levelObj['startState']['player'][0], levelObj['startState']['player'][1])}
     #mapObj = levelObj['mapObj']
 
-    #clock = pygame.time.Clock()
+    clock = pygame.time.Clock()
     last_move_time = pygame.time.get_ticks()  # Track time for step intervals
 
     levelSurf = BASICFONT.render('Level %s of %s' % (level_index + 1, 10), 1, TEXTCOLOR)
@@ -419,10 +433,10 @@ def runLevel(level_index):
                 current_step += 1        
         player.update()  # Update player position for smooth animation
         #draw_game(levelObj, player, mapObj, max_width, max_height)
-        draw_game(player, mapObj, max_width, max_height)
+        #draw_game(mapObj, max_width, max_height)
+        draw_game(levelObj, max_width, max_height)  # Draw the updated game state
 
         #draw_game(game_state, player, mapObj)  # Draw the updated game state
-        FPSCLOCK.tick(FPS)
         return max_width, max_height
 
 def readLevelsFile(filename):
@@ -452,7 +466,7 @@ def readLevelsFile(filename):
                 for x, tile in enumerate(row):
                     if tile == '@' or tile =='+':
                         startx, starty = x, y
-                        mapObj[y][x] = ' '
+                        mapObj[x][y] = ' '
 
             levels.append({'mapObj': mapObj, 'startState': {'player': (startx, starty)}})
             mapTextLines = []
@@ -477,12 +491,14 @@ def handle_level_selection(event):
 
             #levels[current_level_index]['mapObj'] = mapObj
             #runLevel(levels, current_level_index, max_width, max_height)  # Chạy level đã chọn
-            runLevel(current_level_index)
+            runLevel(current_level_index, levels)
 
 
 def main():
     start_screen()  # Display the start screen
     show_loading_screen()
+    global levels
+    levels = load_all_levels()
 
     #levels, max_width, max_height = readLevelsFile('levels/input-01.txt')  # Đọc file level và lấy kích thước bản đồ
     current_level_index = 0
@@ -496,7 +512,7 @@ def main():
     max_height = len(mapObj)
 
     player = Player()
-    runLevel(current_level_index)  # Run the first level
+    runLevel(current_level_index, levels)  # Run the first level
 
     #runLevel(levels, current_level_index, max_width, max_height)  # Pass max_width and max_height here
 
@@ -510,8 +526,7 @@ def main():
         screen.fill(PINK)
    
         draw_buttons()
-        draw_game(player, levels[current_level_index]['mapObj'], max_width, max_height)  # Pass the player instance
-
+        draw_game(mapObj, max_width, max_height)
         draw_level_bar()
 
         for event in pygame.event.get():
@@ -524,15 +539,16 @@ def main():
                         # Toggle button state on click
                         button_states[name] = not button_states[name]
                 handle_level_selection(event)
-        while current_level_index < total_levels:
-            runLevel(current_level_index)
+        #while current_level_index < total_levels:
+             #runLevel(current_level_index)
+
         
         # After the level completes, move to the next level
-        current_level_index += 1
+        #current_level_index += 1
      
-        player.update()
+        #player.update()
 
-        draw_game('player', levels[current_level_index]['mapObj'], max_width, max_height)
+        #draw_game(game_state, sprites[DOWN][0], levels[0]['mapObj'])       
         draw_level_bar()
         draw_buttons()
         pygame.display.update()
