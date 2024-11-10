@@ -275,7 +275,9 @@ def search(board, is_selected):
         end = time()
         mem_usage = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
+        print_results(cost, gen, end - start, mem_usage, move)
+
         if is_selected:
             replay_solution(board, move)
-        print_results(cost, gen, end - start, mem_usage, move)
-    return
+            return len(move), cost
+    return 0, 0 

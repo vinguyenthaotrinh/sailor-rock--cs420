@@ -510,9 +510,12 @@ def main():
     canRun =  False
 
     #moves = []
+    algo = ""
+    step = 0
+    weight = 0
     while running:
         screen.fill(PINK)
-   
+        
         draw_buttons()
         draw_game(mapObj, max_width, max_height, player)
         #time.sleep(2)
@@ -523,7 +526,6 @@ def main():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons['Run'].collidepoint(event.pos):
-                    show_loading_screen()  # Show loading screen
                     if (canRun):
                         run_clicked = True  # Start automatic movement after "Run" is clicked
                         button_states['Run'] = not button_states['Run']
@@ -534,36 +536,55 @@ def main():
 
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
+                    algo = "A*"
                     #IMPLEMENT A*
                     show_loading_screen()  # Show loading screen
                     for i in range(1, 5):
-                        new_game.doSearches(b, i, i == 4)
+                        if i == 4:
+                            weight, step = new_game.doSearches(b, i, i == 4)
+                        else:
+                            new_game.doSearches(b, i, i == 4)
                     canRun = True
            
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
+                    algo = "BFS"
+
                     show_loading_screen()  # Show loading screen
 
                     #IMPLEMENT BFS
                     for i in range(1, 5):
-                        new_game.doSearches(b, i, i == 1)
+                        if i == 1:
+                            weight, step = new_game.doSearches(b, i, i == 1)
+                        else:
+                            new_game.doSearches(b, i, i == 1)
                     canRun = True
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     button_states['DFS'] = not button_states['DFS']
+                    algo = "DFS"
+
                     show_loading_screen()  # Show loading screen
                     #IMPLEMENT DFS
                     for i in range(1, 5):
-                        new_game.doSearches(b, i, i == 2)
+                        if i == 2:
+                            weight, step = new_game.doSearches(b, i, i == 2)
+                        else:
+                            new_game.doSearches(b, i, i == 2)
                     canRun = True
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
+                    algo = "UCS"
+
                     show_loading_screen()  # Show loading screen
                     #IMPLEMENT UCS
                     for i in range(1, 5):
-                        new_game.doSearches(b, i, i == 3)
+                        if i == 3:
+                            weight, step = new_game.doSearches(b, i, i == 3)
+                        else: 
+                            new_game.doSearches(b, i, i == 3)
                     canRun = True
 
                 elif buttons['Reset'].collidepoint(event.pos):
