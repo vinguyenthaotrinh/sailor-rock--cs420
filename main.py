@@ -563,7 +563,6 @@ def main():
                     setButtonState()
                     button_states['A*'] = not button_states['A*']
                     algo = "A*"
-                    #IMPLEMENT A*
                     # for i in range(1, 5):
                     #     if i == 4:
                     #         step, weight = new_game.doSearches(b, i, i == 4)
@@ -580,53 +579,36 @@ def main():
                     button_states['BFS'] = not button_states['BFS']
                     algo = "BFS"
 
-                    #IMPLEMENT BFS
-                    show_loading_screen()  # Show loading screen
-
-                    # for i in range(1, 5):
-                    #     if i == 1:
-                    #         step, weight = new_game.doSearches(b, i, i == 1)
-                    #     else:
-                    #         new_game.doSearches(b, i, i == 1)
-                    # canRun = True
-                    threading.Thread(target=run_algorithm, args=(b, new_game, 1)).start()
+                    step, weight = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 1))
+                    backend_thread.start()
+                    backend_running = True 
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     setButtonState()
                     button_states['DFS'] = not button_states['DFS']
                     algo = "DFS"
 
-                    #IMPLEMENT DFS
-                    show_loading_screen()  # Show loading screen
-                    # for i in range(1, 5):
-                    #     if i == 2:
-                    #         step, weight = new_game.doSearches(b, i, i == 2)
-                    #     else:
-                    #         new_game.doSearches(b, i, i == 2)
-                    # canRun = True
-                    threading.Thread(target=run_algorithm, args=(b, new_game, 2)).start()
+                    step, weight = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 2))
+                    backend_thread.start()
+                    backend_running = True 
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     setButtonState()
                     button_states['UCS'] = not button_states['UCS']
                     algo = "UCS"
 
-                    #IMPLEMENT UCS
-                    show_loading_screen()  # Show loading screen
-                    # for i in range(1, 5):
-                    #     if i == 3:
-                    #         step, weight = new_game.doSearches(b, i, i == 3)
-                    #     else: 
-                    #         new_game.doSearches(b, i, i == 3)
-                    # canRun = True
-                    threading.Thread(target=run_algorithm, args=(b, new_game, 3)).start()
+                    step, weight = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 3))
+                    backend_thread.start()
+                    backend_running = True 
 
                 elif buttons['Reset'].collidepoint(event.pos):
                     button_states['Reset'] = not button_states['Reset']
                     draw_buttons()
-                    mapObj, max_width, max_height = runLevel(0, player)
+                    mapObj, max_width, max_height = runLevel(current_level_index, player)
 
-                    current_level_index = 0
                     level = current_level_index + 1
                     file_name = f'levels/input-{level:02}.txt'
                     b = new_game.new_board(file_name)
