@@ -2,15 +2,15 @@ Algorithm: BFS
 Steps: 19
 Total cost: 54
 Node: 618
-Time: 21.71 ms
-Memory: 0.02 MB
+Time: 31.14 ms
+Memory: 0.06 MB
 Solution: dlluRdrUUUddrruuulL
 
 Algorithm: DFS
 Steps: 41
 Total cost: 90
 Node: 523
-Time: 21.68 ms
+Time: 3.51 ms
 Memory: 0.02 MB
 Solution: rruuulllldddRRlluuurrrrdddLdlUUUddrruuulL
 
@@ -18,14 +18,14 @@ Algorithm: UCS
 Steps: 19
 Total cost: 54
 Node: 736
-Time: 23.03 ms
+Time: 31.66 ms
 Memory: 0.02 MB
 Solution: dlluRdrUUUddrruuulL
 
 Algorithm: A*
 Steps: 19
 Total cost: 54
-Node: 241
-Time: 3.00 ms
+Node: 397
+Time: 0.00 ms
 Memory: 0.02 MB
 Solution: dlluRdrUUUddrruuulL
