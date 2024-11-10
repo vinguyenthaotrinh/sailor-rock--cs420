@@ -9,7 +9,7 @@ import threading
 pygame.init()
 
 # Screen settings
-SCREEN_WIDTH, SCREEN_HEIGHT = 1000, 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Sailor Rock")
 
@@ -23,7 +23,7 @@ BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 # Constants
 TILE_SIZE = 50
 FPS = 30  # frames per second to update the screen
-WINWIDTH = 1000  # width of the program's window, in pixels
+WINWIDTH = 1200  # width of the program's window, in pixels
 WINHEIGHT = 600  # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
@@ -150,6 +150,16 @@ class Player:
 
 # Load loading images
 loading_images = [pygame.image.load(f'assets/loading/{i}.png') for i in range(1,9)]
+
+def draw_status(screen, level, step, weight):
+    font = pygame.font.Font(None, 36)
+    level_text = font.render(f"Level: {level}", True, (0, 0, 0))
+    step_text = font.render(f"Steps: {step}", True, (0, 0, 0))
+    weight_text = font.render(f"Weight: {weight}", True, (0, 0, 0))
+    
+    screen.blit(level_text, (20, 20))
+    screen.blit(step_text, (20, 60))
+    screen.blit(weight_text, (20, 100))
 
 def show_loading_screen():
     """
@@ -545,6 +555,9 @@ def main():
             draw_game(mapObj, max_width, max_height, player)
             #time.sleep(2)
             draw_level_bar()
+            step, weight = 0, 0
+            draw_status(screen, current_level_index + 1, step, weight)  # Show current level, steps, weight
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -634,6 +647,8 @@ def main():
                             setButtonState()
                             break
                     draw_level_bar()
+                draw_status(screen, current_level_index + 1, step, weight)  # Show current level, steps, weight
+
         if not backend_running:
             draw_buttons()
         #pygame.display.update()
