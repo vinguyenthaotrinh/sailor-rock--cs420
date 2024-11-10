@@ -160,6 +160,7 @@ def draw_status(screen, level, step, weight):
     screen.blit(level_text, (20, 20))
     screen.blit(step_text, (20, 60))
     screen.blit(weight_text, (20, 100))
+    pygame.display.flip()
 
 def show_loading_screen():
     """
@@ -278,7 +279,6 @@ def draw_game(mapObj, max_width, max_height, player):
     player.draw()  # Draw player on top of the map
     draw_level_bar() 
     draw_buttons()
-
 
     pygame.display.flip()
 
