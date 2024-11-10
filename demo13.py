@@ -541,7 +541,7 @@ def main():
                     show_loading_screen()  # Show loading screen
                     for i in range(1, 5):
                         if i == 4:
-                            weight, step = new_game.doSearches(b, i, i == 4)
+                            step, weight = new_game.doSearches(b, i, i == 4)
                         else:
                             new_game.doSearches(b, i, i == 4)
                     canRun = True
@@ -556,7 +556,7 @@ def main():
                     #IMPLEMENT BFS
                     for i in range(1, 5):
                         if i == 1:
-                            weight, step = new_game.doSearches(b, i, i == 1)
+                            step, weight = new_game.doSearches(b, i, i == 1)
                         else:
                             new_game.doSearches(b, i, i == 1)
                     canRun = True
@@ -569,7 +569,7 @@ def main():
                     #IMPLEMENT DFS
                     for i in range(1, 5):
                         if i == 2:
-                            weight, step = new_game.doSearches(b, i, i == 2)
+                            step, weight = new_game.doSearches(b, i, i == 2)
                         else:
                             new_game.doSearches(b, i, i == 2)
                     canRun = True
@@ -582,7 +582,7 @@ def main():
                     #IMPLEMENT UCS
                     for i in range(1, 5):
                         if i == 3:
-                            weight, step = new_game.doSearches(b, i, i == 3)
+                            step, weight = new_game.doSearches(b, i, i == 3)
                         else: 
                             new_game.doSearches(b, i, i == 3)
                     canRun = True
