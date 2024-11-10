@@ -39,6 +39,7 @@ def search(board, is_selected):
         tracemalloc.stop()
         if is_selected:
             replay_solution(board, board.dir_list)
+            return len(board.dir_list), board.cost
         print_results(board, 1, 0, 0, 1, end - start, mem_usage)
         return board
     
@@ -58,6 +59,7 @@ def search(board, is_selected):
             tracemalloc.stop()
             if is_selected:
                 replay_solution(board, cur_node.dir_list)
+                return len(cur_node.dir_list), cur_node.cost
             print_results(cur_node, nodes_generated, end - start, mem_usage)
             return cur_node
                 

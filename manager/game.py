@@ -44,13 +44,13 @@ class Game:
 
     def doSearches(self, board, algorithm, is_selected):
         if algorithm == 1:
-            bfs(board, is_selected)
+            return bfs(board, is_selected)
         if algorithm == 2:
-            dfs(board, is_selected)
+            return dfs(board, is_selected)
         if algorithm == 3:
-            ucs(board, is_selected)
+            return ucs(board, is_selected)
         if algorithm == 4:
-            astar(board, is_selected)
+            return astar(board, is_selected)
 
     def run(self):
         print("Which algorithm?")
@@ -64,7 +64,7 @@ class Game:
         
         file_name = f'levels/input-{level:02}.txt'  # Format level file
         print('\nSolving ' + file_name + '...\n')
-        for i in range(4, 5):
+        for i in range(1, 5):
             b = self.new_board(file_name)
             self.doSearches(b, i, i == option)
     

@@ -19,3 +19,6 @@ puzzle/
 testcase/
 
 # Files
+manager/gui.txt
+manager/output-*.txt
+
