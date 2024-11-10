@@ -32,6 +32,7 @@ BUTTON_HEIGHT = 40
 
 # Directions
 UP, DOWN, LEFT, RIGHT = 'up', 'down', 'left', 'right'
+# Stat value
 
 def load_and_scale_image(path, width, height):
     image = pygame.image.load(path)
@@ -508,12 +509,14 @@ def setButtonState():
     for name in button_states:
         button_states[name] = False
     
-def run_algorithm(b, new_game, step, weight, value):
+def run_algorithm(b, new_game, value):
     # show_loading_screen()  # Show loading screen
     print("Running algorithm...")
     for i in range(1, 5):
         if i == value:
-            step, weight = new_game.doSearches(b, i, True)
+            global stepStat
+            global weightStat
+            stepStat, weightStat = new_game.doSearches(b, i, True)
         else:
             new_game.doSearches(b, i, False)
     print("Algorithm finished.")
@@ -546,8 +549,12 @@ def main():
 
     #moves = []
     algo = ""
-    step = 0
-    weight = 0
+    global stepStat
+    stepStat = 0
+    global weightStat
+    weightStat = 0
+    print(stepStat, weightStat)
+
     while running:
         if backend_running:
             if backend_thread.is_alive():
@@ -562,8 +569,7 @@ def main():
             draw_game(mapObj, max_width, max_height, player)
             #time.sleep(2)
             draw_level_bar()
-            step, weight = 0, 0
-            draw_status(screen, current_level_index + 1, step, weight)  # Show current level, steps, weight
+            draw_status(screen, current_level_index + 1, stepStat, weightStat)  # Show current level, steps, weight
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -583,24 +589,19 @@ def main():
                     setButtonState()
                     button_states['A*'] = not button_states['A*']
                     algo = "A*"
-                    # for i in range(1, 5):
-                    #     if i == 4:
-                    #         step, weight = new_game.doSearches(b, i, i == 4)
-                    #     else:
-                    #         new_game.doSearches(b, i, i == 4)
-                    # canRun = True
-                    step, weight = 0, 0
-                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 4))
+                    stepStat, weightStat = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, 4))
                     backend_thread.start()
-                    backend_running = True         
+
+                    backend_running = True
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     setButtonState()
                     button_states['BFS'] = not button_states['BFS']
                     algo = "BFS"
 
-                    step, weight = 0, 0
-                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 1))
+                    stepStat, weightStat = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, 1))
                     backend_thread.start()
                     backend_running = True 
 
@@ -609,8 +610,8 @@ def main():
                     button_states['DFS'] = not button_states['DFS']
                     algo = "DFS"
 
-                    step, weight = 0, 0
-                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 2))
+                    stepStat, weightStat = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, 2))
                     backend_thread.start()
                     backend_running = True 
 
@@ -619,8 +620,8 @@ def main():
                     button_states['UCS'] = not button_states['UCS']
                     algo = "UCS"
 
-                    step, weight = 0, 0
-                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, step, weight, 3))
+                    stepStat, weightStat = 0, 0
+                    backend_thread = threading.Thread(target=run_algorithm, args=(b, new_game, 3))
                     backend_thread.start()
                     backend_running = True 
 
@@ -654,7 +655,7 @@ def main():
                             setButtonState()
                             break
                     draw_level_bar()
-                draw_status(screen, current_level_index + 1, step, weight)  # Show current level, steps, weight
+                draw_status(screen, current_level_index + 1, stepStat, weightStat)  # Show current level, steps, weight
 
         if not backend_running:
             draw_buttons()
