@@ -477,7 +477,7 @@ def run(levels, level_index):
         # Automatically move the player along the path with a 1-second interval between steps
         if current_step < len(path) and not player.is_moving:
             current_time = pygame.time.get_ticks()
-            if (current_time - last_move_time) > 50:  
+            if (current_time - last_move_time) > 300:  
                 direction = path[current_step]
                 if direction == 'u':
                     player.move(UP)
