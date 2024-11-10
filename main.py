@@ -152,14 +152,21 @@ class Player:
 loading_images = [pygame.image.load(f'assets/loading/{i}.png') for i in range(1,9)]
 
 def draw_status(screen, level, step, weight):
-    font = pygame.font.Font(None, 36)
-    level_text = font.render(f"Level: {level}", True, (0, 0, 0))
-    step_text = font.render(f"Steps: {step}", True, (0, 0, 0))
-    weight_text = font.render(f"Weight: {weight}", True, (0, 0, 0))
-    
-    screen.blit(level_text, (20, 20))
-    screen.blit(step_text, (20, 60))
-    screen.blit(weight_text, (20, 100))
+    weightSurf = BASICFONT.render(f'Weight: {weight}', True, TEXTCOLOR)
+    weightRect = weightSurf.get_rect()
+    weightRect.bottomleft = (20, WINHEIGHT - 75)
+
+    stepSurf = BASICFONT.render(f'Step: {step}', True, TEXTCOLOR)
+    stepRect = stepSurf.get_rect()
+    stepRect.bottomleft = (20, WINHEIGHT - 55)
+
+    levelSurf = BASICFONT.render('Level %s of %s' % (level, len(levels)), 1, TEXTCOLOR)
+    levelRect = levelSurf.get_rect()
+    levelRect.bottomleft = (20, WINHEIGHT - 35)
+
+    screen.blit(levelSurf, levelRect)
+    screen.blit(stepSurf, stepRect)
+    screen.blit(weightSurf, weightRect)
     pygame.display.flip()
 
 def show_loading_screen():
