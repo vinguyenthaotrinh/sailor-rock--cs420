@@ -33,6 +33,11 @@ BUTTON_HEIGHT = 40
 # Directions
 UP, DOWN, LEFT, RIGHT = 'up', 'down', 'left', 'right'
 # Stat value
+global stepStat
+stepStat = 0
+global weightStat
+weightStat = 0
+
 
 def load_and_scale_image(path, width, height):
     image = pygame.image.load(path)
@@ -152,12 +157,12 @@ class Player:
 # Load loading images
 loading_images = [pygame.image.load(f'assets/loading/{i}.png') for i in range(1,9)]
 
-def draw_status(screen, level, step, weight):
-    weightSurf = BASICFONT.render(f'Weight: {weight}', True, TEXTCOLOR)
+def draw_status(level):
+    weightSurf = BASICFONT.render(f'Weight: {weightStat}', True, TEXTCOLOR)
     weightRect = weightSurf.get_rect()
     weightRect.bottomleft = (20, WINHEIGHT - 75)
 
-    stepSurf = BASICFONT.render(f'Step: {step}', True, TEXTCOLOR)
+    stepSurf = BASICFONT.render(f'Step: {stepStat}', True, TEXTCOLOR)
     stepRect = stepSurf.get_rect()
     stepRect.bottomleft = (20, WINHEIGHT - 55)
 
@@ -279,7 +284,7 @@ def draw_map_items(mapObj, max_width, max_height):
 
     screen.blit(mapSurf, mapSurfRect)
 
-def draw_game(mapObj, max_width, max_height, player):
+def draw_game(mapObj, max_width, max_height, player, current_level_index):
     """Draws the entire game screen with map items and player."""
     screen.fill(PINK)
     
@@ -287,6 +292,7 @@ def draw_game(mapObj, max_width, max_height, player):
     player.draw()  # Draw player on top of the map
     draw_level_bar() 
     draw_buttons()
+    draw_status(current_level_index + 1)
 
     pygame.display.flip()
 
@@ -408,7 +414,10 @@ def runLevel(level_index, player):
     levelSurf = BASICFONT.render('Level %s of %s' % (level_index + 1, 10), 1, TEXTCOLOR)
     levelRect = levelSurf.get_rect()
     levelRect.bottomleft = (20, WINHEIGHT - 35)
-    draw_game(mapObj, max_width, max_height, player)
+    global stepStat
+    global weightStat
+    stepStat, weightStat = 0, 0
+    draw_game(mapObj, max_width, max_height, player, current_level_index)
     return mapObj, max_width, max_height
 
 def run(levels, level_index):
@@ -485,7 +494,7 @@ def run(levels, level_index):
                 current_step += 1     
         player.update()  # Update player position for smooth animation
  
-        draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
+        draw_game(mapObj, max_width, max_height, player, current_level_index)  # Draw the updated game state
 
     button_states["Run"] = not button_states["Run"]
     return mapObj, player
@@ -549,11 +558,6 @@ def main():
 
     #moves = []
     algo = ""
-    global stepStat
-    stepStat = 0
-    global weightStat
-    weightStat = 0
-    print(stepStat, weightStat)
 
     while running:
         if backend_running:
@@ -566,10 +570,9 @@ def main():
             screen.fill(PINK)
             
             draw_buttons()
-            draw_game(mapObj, max_width, max_height, player)
+            draw_game(mapObj, max_width, max_height, player, current_level_index)
             #time.sleep(2)
             draw_level_bar()
-            draw_status(screen, current_level_index + 1, stepStat, weightStat)  # Show current level, steps, weight
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -635,7 +638,8 @@ def main():
                     b = new_game.new_board(file_name)
                     stepStat, weightStat = 0, 0
                     canRun = False
-                    setButtonState()
+                    button_states['Reset'] = not button_states['Reset']
+                    draw_buttons()
     
                 else:
                 # can not go any function here
@@ -654,10 +658,8 @@ def main():
                             b = new_game.new_board(file_name)
                             canRun = False
                             setButtonState()
-                            stepStat, weightStat = 0, 0
                             break
                     draw_level_bar()
-                draw_status(screen, current_level_index + 1, stepStat, weightStat)  # Show current level, steps, weight
 
         if not backend_running:
             draw_buttons()
