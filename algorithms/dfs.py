@@ -27,7 +27,7 @@ def replay_solution(start_board, dir_list):
             replay_board.move(dir)
             file.write(replay_board.get_board_as_string() + "\n")   
 
-def search(board, is_selected, is_printed):
+def search(board, is_selected):
     start = time()
     tracemalloc.start()  # Bắt đầu theo dõi bộ nhớ
     nodes_generated = 0
@@ -38,8 +38,7 @@ def search(board, is_selected, is_printed):
         tracemalloc.stop()
         if is_selected:
             replay_solution(board, board.dir_list)
-        if is_printed:
-            print_results(board, 1, end - start, mem_usage)
+        print_results(board, 1, end - start, mem_usage)
         return board
     
     node = deepcopy(board)
@@ -62,8 +61,7 @@ def search(board, is_selected, is_printed):
                 tracemalloc.stop()
                 if is_selected:
                     replay_solution(board, child.dir_list)
-                if is_printed:
-                    print_results(child, nodes_generated, end - start, mem_usage)
+                print_results(child, nodes_generated, end - start, mem_usage)
                 return child
             if not child.is_deadlock() and (tuple(child.stones), child.player) not in reached:
                 frontier.append(child)

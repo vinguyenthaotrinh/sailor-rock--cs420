@@ -256,7 +256,7 @@ def replay_solution(start_board, dir_list):
             file.write(replay_board.get_board_as_string() + "\n")
             
 
-def search(board, is_selected, is_printed):
+def search(board, is_selected):
     start = time()
     tracemalloc.start()
     nodes_generated = 0
@@ -277,6 +277,5 @@ def search(board, is_selected, is_printed):
         tracemalloc.stop()
         if is_selected:
             replay_solution(board, move)
-        if is_printed:
-            print_results(cost, gen, end - start, mem_usage, move)
+        print_results(cost, gen, end - start, mem_usage, move)
     return

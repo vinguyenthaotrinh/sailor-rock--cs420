@@ -97,12 +97,12 @@ TILEMAPPING = {
 }
 
 # Thêm vào các thiết lập cho thanh level bar và các nút level
-level_bar_image = load_and_scale_image('ele_level/level_bar.png', 146.5, 30)  # Thanh bar cho level
+level_bar_image = load_and_scale_image('ele_level/level_bar.png', 160.5, 30)  # Thanh bar cho level
 level_buttons = [
-    {'rect': pygame.Rect(5 + i * 11, SCREEN_HEIGHT - 582, 836.9, 20), 
+    {'rect': pygame.Rect(1 + i * 11, SCREEN_HEIGHT - 583, 833.9, 20), 
      'selected': True if i == 0 else False,  # Nút đầu tiên sẽ được chọn
      'visible': True if i == 0 else False}   # Nút đầu tiên sẽ được hiển thị
-    for i in range(9)
+    for i in range(12)
 ] 
 
 current_level_index = 0  # Chỉ số level hiện tại
@@ -343,7 +343,7 @@ def load_map_from_file(level_index):
 
 def load_all_levels():
     levels = []
-    for i in range(10):  # Duyệt qua 10 file từ input-01.txt đến input-10.txt
+    for i in range(13):  # Duyệt qua 10 file từ input-01.txt đến input-10.txt
         levelObj = load_map_from_file(i)
         levels.append({'mapObj': levelObj, 'startState': {'player': (1, 1)}})  # Adjust start position as needed
     return levels
@@ -451,7 +451,7 @@ def run(levels, level_index):
         # Automatically move the player along the path with a 1-second interval between steps
         if current_step < len(path) and not player.is_moving:
             current_time = pygame.time.get_ticks()
-            if (current_time - last_move_time) > 400:  
+            if (current_time - last_move_time) > 100:  
                 direction = path[current_step]
                 if direction == 'u':
                     player.move(UP)
@@ -503,7 +503,7 @@ def main():
     current_level_index = 0
     runLevel(current_level_index, player)
 
-    total_levels = 10  # Number of levels
+    total_levels = 12  # Number of levels
     mapObj = load_map_from_file(current_level_index)
     max_width = max(len(row) for row in mapObj)
     max_height = len(mapObj)
@@ -539,27 +539,30 @@ def main():
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
-                    new_game.doSearches(b, 4, True, False)
+                    for i in range(1, 5):
+                        new_game.doSearches(b, i, i == 4)
                     canRun = True
            
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
                     #IMPLEMENT BFS
-                    new_game.doSearches(b, 1, True, False)
+                    for i in range(1, 5):
+                        new_game.doSearches(b, i, i == 1)
                     canRun = True
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     button_states['DFS'] = not button_states['DFS']
                     #IMPLEMENT DFS
-                    new_game.doSearches(b, 2, True, False)
+                    for i in range(1, 5):
+                        new_game.doSearches(b, i, i == 2)
                     canRun = True
-                    button_states['DFS'] = ['']
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
                     #IMPLEMENT UCS
-                    new_game.doSearches(b, 3, True, False)
+                    for i in range(1, 5):
+                        new_game.doSearches(b, i, i == 3)
                     canRun = True
 
                 elif buttons['Reset'].collidepoint(event.pos):
