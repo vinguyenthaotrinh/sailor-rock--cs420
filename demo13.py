@@ -443,6 +443,7 @@ def run(levels, level_index):
                 sys.exit()
       
         if (current_step >= len(path)):
+            button_states["Run"] = not button_states["Run"]
             return mapObj, player
 
         # Automatically move the player along the path with a 1-second interval between steps
@@ -467,6 +468,7 @@ def run(levels, level_index):
  
         draw_game(mapObj, max_width, max_height, player)  # Draw the updated game state
 
+    button_states["Run"] = not button_states["Run"]
     return mapObj, player
 
 def handle_level_selection(event):
@@ -484,6 +486,9 @@ def handle_level_selection(event):
             print(f"Selected Level: {current_level_index + 1}")
             return current_level_index
 
+def setButtonState():
+    for name in button_states:
+        button_states[name] = False
 
 def main():
     new_game = Game()
@@ -536,8 +541,7 @@ def main():
 
 
                 elif buttons['A*'].collidepoint(event.pos):
-                    for name in button_states:
-                        button_states[name] = False
+                    setButtonState()
                     button_states['A*'] = not button_states['A*']
                     algo = "A*"
                     #IMPLEMENT A*
@@ -551,8 +555,7 @@ def main():
            
 
                 elif buttons['BFS'].collidepoint(event.pos):
-                    for name in button_states:
-                        button_states[name] = False
+                    setButtonState()
                     button_states['BFS'] = not button_states['BFS']
                     algo = "BFS"
 
@@ -567,8 +570,7 @@ def main():
                     canRun = True
 
                 elif buttons['DFS'].collidepoint(event.pos):
-                    for name in button_states:
-                        button_states[name] = False
+                    setButtonState()
                     button_states['DFS'] = not button_states['DFS']
                     algo = "DFS"
 
@@ -582,8 +584,7 @@ def main():
                     canRun = True
 
                 elif buttons['UCS'].collidepoint(event.pos):
-                    for name in button_states:
-                        button_states[name] = False
+                    setButtonState()
                     button_states['UCS'] = not button_states['UCS']
                     algo = "UCS"
 
@@ -598,6 +599,7 @@ def main():
 
                 elif buttons['Reset'].collidepoint(event.pos):
                     button_states['Reset'] = not button_states['Reset']
+                    draw_buttons()
                     mapObj, max_width, max_height = runLevel(0, player)
 
                     current_level_index = 0
@@ -605,6 +607,7 @@ def main():
                     file_name = f'levels/input-{level:02}.txt'
                     b = new_game.new_board(file_name)
                     canRun = False
+                    setButtonState()
     
                 else:
                 # can not go any function here
@@ -622,6 +625,7 @@ def main():
                             file_name = f'levels/input-{level:02}.txt'
                             b = new_game.new_board(file_name)
                             canRun = False
+                            setButtonState()
                             break
                     draw_level_bar()
     
