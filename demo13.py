@@ -73,6 +73,7 @@ buttons = {
     'Run': pygame.Rect(370, 10, 80, BUTTON_HEIGHT),
     'Reset': pygame.Rect(460, 10, 80, BUTTON_HEIGHT),
 }
+
 button_states = {name: False for name in buttons}  # False for unselected, True for selected
 
 sprites = {
@@ -535,6 +536,8 @@ def main():
 
 
                 elif buttons['A*'].collidepoint(event.pos):
+                    for name in button_states:
+                        button_states[name] = False
                     button_states['A*'] = not button_states['A*']
                     algo = "A*"
                     #IMPLEMENT A*
@@ -548,6 +551,8 @@ def main():
            
 
                 elif buttons['BFS'].collidepoint(event.pos):
+                    for name in button_states:
+                        button_states[name] = False
                     button_states['BFS'] = not button_states['BFS']
                     algo = "BFS"
 
@@ -562,6 +567,8 @@ def main():
                     canRun = True
 
                 elif buttons['DFS'].collidepoint(event.pos):
+                    for name in button_states:
+                        button_states[name] = False
                     button_states['DFS'] = not button_states['DFS']
                     algo = "DFS"
 
@@ -575,6 +582,8 @@ def main():
                     canRun = True
 
                 elif buttons['UCS'].collidepoint(event.pos):
+                    for name in button_states:
+                        button_states[name] = False
                     button_states['UCS'] = not button_states['UCS']
                     algo = "UCS"
 
