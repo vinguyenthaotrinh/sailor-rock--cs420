@@ -1,17 +1,13 @@
-# search-adventure--cs420
+# Sailor Rock - Adventure Game
 
-### How to run?
+## How to run?
 
-Create virtual environment (optional):
-`python -m venv venv`
+1. Change the directory to the project's folder: `cd path/to/sailor-rock-adventure`
 
-`.\venv\Scripts\activate`
+2. Optional:
+   - Create virtual environment: `python -m venv venv`
+   - Activate the virtual environment: `.\venv\Scripts\activate`
 
-Install requirements:
+3. Install requirements: `pip install -r requirements.txt`
 
-`pip install -r requirements.txt`
-
-Run and choose algorithm + level:
-
-`python main.py`
-
+4. Run the program: `python main.py`
