@@ -97,9 +97,9 @@ TILEMAPPING = {
 }
 
 # Thêm vào các thiết lập cho thanh level bar và các nút level
-level_bar_image = load_and_scale_image('ele_level/level_bar.png', 160.5, 30)  # Thanh bar cho level
+level_bar_image = load_and_scale_image('ele_level/level_bar.png', 166.5, 30)  # Thanh bar cho level
 level_buttons = [
-    {'rect': pygame.Rect(1 + i * 11, SCREEN_HEIGHT - 583, 833.9, 20), 
+    {'rect': pygame.Rect(1 + i * 11, SCREEN_HEIGHT - 583, 840, 20), 
      'selected': True if i == 0 else False,  # Nút đầu tiên sẽ được chọn
      'visible': True if i == 0 else False}   # Nút đầu tiên sẽ được hiển thị
     for i in range(12)
@@ -150,29 +150,25 @@ class Player:
 loading_images = [pygame.image.load(f'loading/{i}.png') for i in range(1,9)]
 
 def show_loading_screen():
-    """Displays a looping loading screen animation until the file 'manager/gui.txt' is found."""
-    loading_index = 0  # To cycle through loading images
-
-    while not os.path.exists("manager/gui.txt"):
-        # Handle events to allow quitting during the loading screen
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
+    """
+    Displays a loading screen animation by cycling through loading_images once,
+    then returns.
+    """
+    loading_images = [load_and_scale_image(f'loading/{i}.png', 1000, 600) for i in range(1, 9)]
+    
+    for image in loading_images:
         # Display the loading image
         screen.fill((0, 0, 0))  # Fill screen with black
-        screen.blit(loading_images[loading_index], (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 100))
+        screen.blit(image, (SCREEN_WIDTH // 2 - 500, SCREEN_HEIGHT // 2 - 300))  # Center the image
         pygame.display.flip()
-
-        # Cycle to the next image
-        loading_index = (loading_index + 1) % len(loading_images)
         
         # Control the animation speed
-        time.sleep(0.5)  # Adjust to change the animation speed
-
+        time.sleep(0.07)  # Adjust to change the animation speed
+        
         # Cap the frame rate
         FPSCLOCK.tick(FPS)
+    
+    # Optionally, you can add a short pause after the loading screen
 
 
 def draw_level_bar():
@@ -451,7 +447,7 @@ def run(levels, level_index):
         # Automatically move the player along the path with a 1-second interval between steps
         if current_step < len(path) and not player.is_moving:
             current_time = pygame.time.get_ticks()
-            if (current_time - last_move_time) > 100:  
+            if (current_time - last_move_time) > 50:  
                 direction = path[current_step]
                 if direction == 'u':
                     player.move(UP)
@@ -539,6 +535,7 @@ def main():
                 elif buttons['A*'].collidepoint(event.pos):
                     button_states['A*'] = not button_states['A*']
                     #IMPLEMENT A*
+                    show_loading_screen()  # Show loading screen
                     for i in range(1, 5):
                         new_game.doSearches(b, i, i == 4)
                     canRun = True
@@ -546,6 +543,8 @@ def main():
 
                 elif buttons['BFS'].collidepoint(event.pos):
                     button_states['BFS'] = not button_states['BFS']
+                    show_loading_screen()  # Show loading screen
+
                     #IMPLEMENT BFS
                     for i in range(1, 5):
                         new_game.doSearches(b, i, i == 1)
@@ -553,6 +552,7 @@ def main():
 
                 elif buttons['DFS'].collidepoint(event.pos):
                     button_states['DFS'] = not button_states['DFS']
+                    show_loading_screen()  # Show loading screen
                     #IMPLEMENT DFS
                     for i in range(1, 5):
                         new_game.doSearches(b, i, i == 2)
@@ -560,6 +560,7 @@ def main():
 
                 elif buttons['UCS'].collidepoint(event.pos):
                     button_states['UCS'] = not button_states['UCS']
+                    show_loading_screen()  # Show loading screen
                     #IMPLEMENT UCS
                     for i in range(1, 5):
                         new_game.doSearches(b, i, i == 3)
