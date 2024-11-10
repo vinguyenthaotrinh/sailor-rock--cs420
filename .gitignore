@@ -9,12 +9,15 @@ __pycache__
 # Virtual environments
 venv/
 env/
+manager/
 
 # IDE specific files
 .vscode/
 .idea/
 
 # Folders
+levels/*
+!levels/.gitkeep
 puzzle/
 testcase/
 

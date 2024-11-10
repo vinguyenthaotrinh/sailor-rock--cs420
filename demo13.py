@@ -39,28 +39,28 @@ def load_and_scale_image(path, width, height):
 # Load images for buttons
 button_images = {
     'BFS': {
-        'unselected': load_and_scale_image('BFS_un.png',84 ,28),
-        'selected': load_and_scale_image('BFS.png',84 ,28)
+        'unselected': load_and_scale_image('assets/button/BFS_un.png',84 ,28),
+        'selected': load_and_scale_image('assets/button/BFS.png',84 ,28)
     },
     'DFS': {
-        'unselected': load_and_scale_image('DFS_un.png',84 ,28),
-        'selected': load_and_scale_image('DFS.png',84 ,28)
+        'unselected': load_and_scale_image('assets/button/DFS_un.png',84 ,28),
+        'selected': load_and_scale_image('assets/button/DFS.png',84 ,28)
     },
     'A*': {
-        'unselected': load_and_scale_image('A_un.png',84 ,28),
-        'selected': load_and_scale_image('A.png',84 ,28)
+        'unselected': load_and_scale_image('assets/button/A_un.png',84 ,28),
+        'selected': load_and_scale_image('assets/button/A.png',84 ,28)
     },
     'UCS': {
-        'unselected': load_and_scale_image('UCS_un.png',84 ,28),
-        'selected': load_and_scale_image('UCS.png',84 ,28)
+        'unselected': load_and_scale_image('assets/button/UCS_un.png',84 ,28),
+        'selected': load_and_scale_image('assets/button/UCS.png',84 ,28)
     },
     'Run': {
-        'unselected': load_and_scale_image('Run_un.png',84 ,28),
-        'selected': load_and_scale_image('Run.png',84 ,28)
+        'unselected': load_and_scale_image('assets/button/Run_un.png',84 ,28),
+        'selected': load_and_scale_image('assets/button/Run.png',84 ,28)
     },
     'Reset': {
-        'unselected': load_and_scale_image('Reset_un.png',84 ,28),
-        'selected': load_and_scale_image('Reset.png',84 ,28)
+        'unselected': load_and_scale_image('assets/button/Reset_un.png',84 ,28),
+        'selected': load_and_scale_image('assets/button/Reset.png',84 ,28)
     }
 }
 
@@ -77,17 +77,17 @@ buttons = {
 button_states = {name: False for name in buttons}  # False for unselected, True for selected
 
 sprites = {
-    UP: [pygame.image.load(f'up_{i}.png') for i in range(1, 6)],
-    DOWN: [pygame.image.load(f'down_{i}.png') for i in range(1, 6)],
-    LEFT: [pygame.image.load(f'left_{i}.png') for i in range(1, 6)],
-    RIGHT: [pygame.image.load(f'right_{i}.png') for i in range(1, 6)],
+    UP: [pygame.image.load(f'assets/sailor/up_{i}.png') for i in range(1, 6)],
+    DOWN: [pygame.image.load(f'assets/sailor/down_{i}.png') for i in range(1, 6)],
+    LEFT: [pygame.image.load(f'assets/sailor/left_{i}.png') for i in range(1, 6)],
+    RIGHT: [pygame.image.load(f'assets/sailor/right_{i}.png') for i in range(1, 6)],
 }
 
 IMAGESDICT = {
-    'switch places': pygame.image.load('Selector.png'),
-    'wall': pygame.image.load('Wood_Block_Tall.png'),
-    'rock': pygame.image.load('Rock.png'),
-    'inside floor': pygame.image.load('Grass_Block.png')
+    'switch places': pygame.image.load('assets/board/Selector.png'),
+    'wall': pygame.image.load('assets/board/Wood_Block_Tall.png'),
+    'rock': pygame.image.load('assets/board/Rock.png'),
+    'inside floor': pygame.image.load('assets/board/Grass_Block.png')
 }
 
 TILEMAPPING = {
@@ -98,7 +98,7 @@ TILEMAPPING = {
 }
 
 # Thêm vào các thiết lập cho thanh level bar và các nút level
-level_bar_image = load_and_scale_image('ele_level/level_bar.png', 166.5, 30)  # Thanh bar cho level
+level_bar_image = load_and_scale_image('assets/level/level_bar.png', 166.5, 30)  # Thanh bar cho level
 level_buttons = [
     {'rect': pygame.Rect(1 + i * 11, SCREEN_HEIGHT - 583, 840, 20), 
      'selected': True if i == 0 else False,  # Nút đầu tiên sẽ được chọn
@@ -148,14 +148,14 @@ class Player:
         screen.blit(self.image, self.rect)
 
 # Load loading images
-loading_images = [pygame.image.load(f'loading/{i}.png') for i in range(1,9)]
+loading_images = [pygame.image.load(f'assets/loading/{i}.png') for i in range(1,9)]
 
 def show_loading_screen():
     """
     Displays a loading screen animation by cycling through loading_images once,
     then returns.
     """
-    loading_images = [load_and_scale_image(f'loading/{i}.png', 1000, 600) for i in range(1, 9)]
+    loading_images = [load_and_scale_image(f'assets/loading/{i}.png', 1000, 600) for i in range(1, 9)]
     
     for image in loading_images:
         # Display the loading image
@@ -192,7 +192,7 @@ def draw_level_bar():
         if button['visible']:
             return
         else:
-            image = load_and_scale_image('ele_level/level.png', 10, 15)
+            image = load_and_scale_image('assets/level/level.png', 10, 15)
             screen.blit(image, button['rect'].topright)
     if not level_bar_image:
         print("Level bar image not loaded.")
@@ -206,8 +206,8 @@ def draw_buttons():
 
 def start_screen():
     """Displays the start screen with a start button."""
-    start_scr = load_and_scale_image('start_scr.png', SCREEN_WIDTH, SCREEN_HEIGHT)
-    start_button_image = load_and_scale_image('startbtn.png', 100, 50)
+    start_scr = load_and_scale_image('assets/start_scr.png', SCREEN_WIDTH, SCREEN_HEIGHT)
+    start_button_image = load_and_scale_image('assets/button/startbtn.png', 100, 50)
     screen.blit(start_scr, (0, 0))
 
     start_button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 150, 100, 50)
@@ -613,7 +613,7 @@ def main():
                 # can not go any function here
                     for name, rect in buttons.items():
                         if rect.collidepoint(event.pos):  # Kiểm tra va chạm bằng rect
-                            button_states[name] = ['unselect']  # Đổi trạng thái nút
+                            button_states[name] = False #['unselect']  # Đổi trạng thái nút
 
                     for button in level_buttons:
                         rect = button['rect']  # Lấy đối tượng rect từ từ điển
