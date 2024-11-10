@@ -633,6 +633,7 @@ def main():
                     level = current_level_index + 1
                     file_name = f'levels/input-{level:02}.txt'
                     b = new_game.new_board(file_name)
+                    stepStat, weightStat = 0, 0
                     canRun = False
                     setButtonState()
     
@@ -653,6 +654,7 @@ def main():
                             b = new_game.new_board(file_name)
                             canRun = False
                             setButtonState()
+                            stepStat, weightStat = 0, 0
                             break
                     draw_level_bar()
                 draw_status(screen, current_level_index + 1, stepStat, weightStat)  # Show current level, steps, weight
